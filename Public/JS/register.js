@@ -11,6 +11,7 @@
         password: document.getElementById('password'),
         confirmPassword: document.getElementById('confirmPassword')
       };
+      
 
       const errors = {
         username: document.getElementById('usernameError'),
