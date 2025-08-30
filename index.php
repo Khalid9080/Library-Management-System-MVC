@@ -1,9 +1,10 @@
 <?php
 // index.php
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-define('ROOT_PATH', __DIR__);                        
-define('VIEW_PATH', ROOT_PATH . '/MVC/View');        
-define('PARTIALS_PATH', VIEW_PATH . '/Reusable_Components'); 
+define('ROOT_PATH', __DIR__);
+define('VIEW_PATH', ROOT_PATH . '/MVC/View');
+define('PARTIALS_PATH', VIEW_PATH . '/Reusable_Components');
 
 $baseUrlGuess = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
 define('BASE_URL', $baseUrlGuess === '' ? '/' : $baseUrlGuess . '/');
@@ -12,15 +13,20 @@ $allowedPages = [
   'home'      => VIEW_PATH . '/Reusable_Components/main.php',
   'login'     => VIEW_PATH . '/Authentication/login.php',
   'register'  => VIEW_PATH . '/Authentication/register.php',
-  'dashboard' => VIEW_PATH . '/Reusable_Components/dashboard.php', // ← future safe
+  'dashboard' => VIEW_PATH . '/Reusable_Components/dashboard.php',
 ];
 
 $page = $_GET['page'] ?? 'home';
 $viewFile = $allowedPages[$page] ?? $allowedPages['home'];
 
-function asset($path) {
-  return BASE_URL . ltrim($path, '/');
+// simple guard: protect dashboard
+//($page === 'dashboard' && empty($_SESSION['user']))
+if ($page === 'dashboard' && empty($_SESSION['logged_in'])) {
+  header("Location: " . BASE_URL . "index.php?page=login");
+  exit;
 }
+
+function asset($path) { return BASE_URL . ltrim($path, '/'); }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,16 +37,11 @@ function asset($path) {
   <link rel="stylesheet" href="<?= asset('Public/Style/index.css') ?>" />
 </head>
 <body class="page-<?= htmlspecialchars($page) ?>">
-
   <a href="#main" class="skip-link">Skip to content</a>
-
   <?php include PARTIALS_PATH . '/header.php'; ?>
-
   <main id="main">
     <?php include $viewFile; ?>
   </main>
-
   <?php include PARTIALS_PATH . '/footer.php'; ?>
-
 </body>
 </html>

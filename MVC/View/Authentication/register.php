@@ -1,8 +1,10 @@
+<script>window.APP_BASE_URL = '<?= rtrim(BASE_URL, "/") ?>/';</script>
 <link rel="stylesheet" href="<?= asset('Public/Style/register.css') ?>" />
 <script src="<?= asset('Public/JS/register.js') ?>?v=<?= time() ?>" defer></script>
 
-
 <div class="register-container">
+  <!-- (rest of your markup unchanged) -->
+
   <div class="register-card" role="form" aria-labelledby="registerTitle">
     <div class="register-header">
       <h2 id="registerTitle">Create Account</h2>

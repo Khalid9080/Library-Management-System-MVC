@@ -1,7 +1,9 @@
+<script>window.APP_BASE_URL = '<?= rtrim(BASE_URL, "/") ?>/';</script>
 <link rel="stylesheet" href="<?= asset('Public/Style/login.css') ?>" />
 <script src="<?= asset('Public/JS/login.js') ?>?v=<?= time() ?>" defer></script>
 
 <div class="login-container">
+  <!-- (rest of your markup unchanged) -->
   <div class="login-card" role="form" aria-labelledby="loginTitle">
     <div class="login-header">
       <h2 id="loginTitle">Sign in</h2>

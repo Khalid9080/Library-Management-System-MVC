@@ -1,6 +1,5 @@
 // Public/JS/register.js
 (function () {
-  // If this doesn't print, the file didn't load (path/cache).
   console.log('[register.js] ready');
 
   var form = document.getElementById('registerForm');
@@ -16,7 +15,7 @@
     email: document.getElementById('email'),
     phone: document.getElementById('phone'),
     password: document.getElementById('password'),
-    confirmPassword: document.getElementById('confirmPassword')
+    confirmPassword: document.getElementById('confirmPassword'),
   };
 
   var errors = {
@@ -27,10 +26,8 @@
     confirmPassword: document.getElementById('confirmPasswordError')
   };
 
-  // Helper: add listener safely
   function on(el, ev, fn) { if (el) el.addEventListener(ev, fn); }
 
-  // Track "touched" (blurred at least once) so we don't spam errors while typing the first time
   var touched = {};
 
   // Password toggles
@@ -43,15 +40,14 @@
         var input = id ? document.getElementById(id) : null;
         if (!input) return;
         input.type = (input.type === 'password') ? 'text' : 'password';
-        // keep caret at end
         var v = input.value;
         input.focus();
-        try { input.setSelectionRange(v.length, v.length); } catch (_) {}
+        try { input.setSelectionRange(v.length, v.length); } catch (_) { }
       });
     })(toggles[i]);
   }
 
-  // Validators (explicit required first, then specific rule)
+  // Validators
   function isFilled(v) { return v != null && String(v).trim() !== ''; }
 
   function validate_username(v) {
@@ -85,7 +81,7 @@
     email: validate_email,
     phone: validate_phone,
     password: validate_password,
-    confirmPassword: validate_confirmPassword
+    confirmPassword: function (v) { return validate_confirmPassword(v, getValues()); }
   };
 
   function getValues() {
@@ -106,8 +102,7 @@
     if (group) group.classList.add('error');
     if (errEl) {
       errEl.textContent = message;
-      errEl.classList.add('show'); // CSS -> opacity:1; slide in
-      // ensure it's visible in layout
+      errEl.classList.add('show');
       errEl.style.display = 'block';
     }
     input.setAttribute('aria-invalid', 'true');
@@ -122,21 +117,18 @@
     if (errEl) {
       errEl.textContent = '';
       errEl.classList.remove('show');
-      // keep space if you want; otherwise allow collapse:
-      // errEl.style.display = 'block';
+      errEl.style.display = '';
     }
-    input.setAttribute('aria-invalid', 'false');
+    input.removeAttribute('aria-invalid');
   }
 
   function validateField(key, force) {
     var input = fields[key];
     if (!input) return true;
-
-    // Only validate on input after first blur, unless forced (blur/submit)
     if (!force && !touched[key]) return true;
 
     var v = input.value;
-    var res = validators[key](v, getValues());
+    var res = validators[key](v);
     if (res === true) {
       clearError(key);
       return true;
@@ -156,7 +148,6 @@
     return ok;
   }
 
-  // Attach listeners
   for (var key in fields) {
     if (!fields.hasOwnProperty(key)) continue;
     (function (k) {
@@ -166,7 +157,6 @@
       on(input, 'blur', function () {
         touched[k] = true;
         validateField(k, true);
-        // keep confirm in sync when password changes
         if (k === 'password' && (fields.confirmPassword && (fields.confirmPassword.value || touched.confirmPassword))) {
           validateField('confirmPassword', true);
         }
@@ -183,15 +173,51 @@
 
   on(form, 'submit', function (e) {
     e.preventDefault();
-    // mark all touched and validate
     for (var k in fields) if (fields.hasOwnProperty(k)) touched[k] = true;
     if (!validateAll(true)) return;
 
     if (submitBtn) submitBtn.classList.add('loading');
-    setTimeout(function () {
-      if (submitBtn) submitBtn.classList.remove('loading');
-      var ok = document.getElementById('successMessage');
-      if (ok) ok.classList.add('show');
-    }, 900);
+
+    var formData = new FormData();
+    formData.append('action', 'register');
+    formData.append('username', fields.username.value.trim());
+    formData.append('email', fields.email.value.trim());
+    formData.append('phone', fields.phone.value.trim());
+    formData.append('password', fields.password.value);
+    formData.append('confirmPassword', fields.confirmPassword.value);
+
+    // Derive root and endpoint WITHOUT using PHP in JS
+    var root =
+      (document.querySelector('base')?.href ||
+       (window.APP_BASE_URL || document.baseURI))
+        .replace(/index\.php.*$/, '')
+        .replace(/\/+$/, '') + '/';
+
+    formData.append('baseUrl', root);
+
+    var endpoint = root + 'MVC/Controller/AuthController.php';
+
+    fetch(endpoint, {
+      method: 'POST',
+      body: formData
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (submitBtn) submitBtn.classList.remove('loading');
+        if (data.ok) {
+          var ok = document.getElementById('successMessage');
+          if (ok) ok.classList.add('show');
+          window.location = data.redirect;
+        } else {
+          showError('email', data.error || 'Registration failed');
+        }
+      })
+      .catch(function () {
+        if (submitBtn) submitBtn.classList.remove('loading');
+        showError('email', 'Network error. Try again.');
+      });
+
+     
   });
+
 })();
