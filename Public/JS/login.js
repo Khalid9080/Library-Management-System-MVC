@@ -1,39 +1,31 @@
-// Public/JS/register.js
+// Public/JS/login.js
 (function () {
-  // If this doesn't print, the file didn't load (path/cache).
-  console.log('[register.js] ready');
+  console.log('[login.js] ready');
 
-  var form = document.getElementById('registerForm');
+  var form = document.getElementById('loginForm');
   var submitBtn = document.getElementById('submitBtn');
 
   if (!form) {
-    console.error('[register.js] #registerForm not found');
+    console.error('[login.js] #loginForm not found');
     return;
   }
 
   var fields = {
-    username: document.getElementById('username'),
     email: document.getElementById('email'),
-    phone: document.getElementById('phone'),
     password: document.getElementById('password'),
-    confirmPassword: document.getElementById('confirmPassword')
   };
 
   var errors = {
-    username: document.getElementById('usernameError'),
     email: document.getElementById('emailError'),
-    phone: document.getElementById('phoneError'),
     password: document.getElementById('passwordError'),
-    confirmPassword: document.getElementById('confirmPasswordError')
   };
 
-  // Helper: add listener safely
   function on(el, ev, fn) { if (el) el.addEventListener(ev, fn); }
 
-  // Track "touched" (blurred at least once) so we don't spam errors while typing the first time
+  // Track blur state so we don’t spam errors while typing first time
   var touched = {};
 
-  // Password toggles
+  // Password toggle(s)
   var toggles = document.querySelectorAll('.password-toggle');
   for (var i = 0; i < toggles.length; i++) {
     (function (btn) {
@@ -51,52 +43,25 @@
     })(toggles[i]);
   }
 
-  // Validators (explicit required first, then specific rule)
+  // Validators (required first, then specific rule)
   function isFilled(v) { return v != null && String(v).trim() !== ''; }
 
-  function validate_username(v) {
-    if (!isFilled(v)) return 'This field is required';
-    if (String(v).trim().length < 2) return 'User name must be at least 2 characters';
-    return true;
-  }
   function validate_email(v) {
     if (!isFilled(v)) return 'This field is required';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return 'Enter a valid email address';
     return true;
   }
-  function validate_phone(v) {
-    if (!isFilled(v)) return 'This field is required';
-    if (!/^[0-9()+\-\s]{7,20}$/.test(v)) return 'Enter a valid phone number';
-    return true;
-  }
+
   function validate_password(v) {
     if (!isFilled(v)) return 'This field is required';
     if (String(v).length < 8) return 'Password must be at least 8 characters';
     return true;
   }
-  function validate_confirmPassword(v, all) {
-    if (!isFilled(v)) return 'This field is required';
-    if (v !== all.password) return "Passwords don't match";
-    return true;
-  }
 
   var validators = {
-    username: validate_username,
     email: validate_email,
-    phone: validate_phone,
     password: validate_password,
-    confirmPassword: validate_confirmPassword
   };
-
-  function getValues() {
-    return {
-      username: fields.username ? fields.username.value : '',
-      email: fields.email ? fields.email.value : '',
-      phone: fields.phone ? fields.phone.value : '',
-      password: fields.password ? fields.password.value : '',
-      confirmPassword: fields.confirmPassword ? fields.confirmPassword.value : ''
-    };
-  }
 
   function showError(key, message) {
     var input = fields[key];
@@ -106,9 +71,8 @@
     if (group) group.classList.add('error');
     if (errEl) {
       errEl.textContent = message;
-      errEl.classList.add('show'); // CSS -> opacity:1; slide in
-      // ensure it's visible in layout
-      errEl.style.display = 'block';
+      errEl.classList.add('show');
+      errEl.style.display = 'block'; // ensure visible in layout if needed
     }
     input.setAttribute('aria-invalid', 'true');
   }
@@ -122,8 +86,7 @@
     if (errEl) {
       errEl.textContent = '';
       errEl.classList.remove('show');
-      // keep space if you want; otherwise allow collapse:
-      // errEl.style.display = 'block';
+      // errEl.style.display = 'block'; // keep collapsed
     }
     input.setAttribute('aria-invalid', 'false');
   }
@@ -131,12 +94,10 @@
   function validateField(key, force) {
     var input = fields[key];
     if (!input) return true;
-
-    // Only validate on input after first blur, unless forced (blur/submit)
-    if (!force && !touched[key]) return true;
+    if (!force && !touched[key]) return true; // don’t validate until first blur unless forced
 
     var v = input.value;
-    var res = validators[key](v, getValues());
+    var res = validators[key](v);
     if (res === true) {
       clearError(key);
       return true;
@@ -166,17 +127,10 @@
       on(input, 'blur', function () {
         touched[k] = true;
         validateField(k, true);
-        // keep confirm in sync when password changes
-        if (k === 'password' && (fields.confirmPassword && (fields.confirmPassword.value || touched.confirmPassword))) {
-          validateField('confirmPassword', true);
-        }
       });
 
       on(input, 'input', function () {
         if (touched[k]) validateField(k, true);
-        if (k === 'password' && touched.confirmPassword) {
-          validateField('confirmPassword', true);
-        }
       });
     })(key);
   }
@@ -187,11 +141,13 @@
     for (var k in fields) if (fields.hasOwnProperty(k)) touched[k] = true;
     if (!validateAll(true)) return;
 
+    // Simulate request/spinner then show success (replace with real fetch later)
     if (submitBtn) submitBtn.classList.add('loading');
     setTimeout(function () {
       if (submitBtn) submitBtn.classList.remove('loading');
       var ok = document.getElementById('successMessage');
       if (ok) ok.classList.add('show');
+      // TODO: window.location = '<?= BASE_URL ?>index.php?page=dashboard';
     }, 900);
   });
 })();

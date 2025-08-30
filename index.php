@@ -1,26 +1,23 @@
 <?php
-// index.php (in project root)
+// index.php
 
-// Define base constants for robust paths/URLs
 define('ROOT_PATH', __DIR__);                        
 define('VIEW_PATH', ROOT_PATH . '/MVC/View');        
-define('PARTIALS_PATH', VIEW_PATH . '/Reusable_Components'); // ✅ match your folder name exactly!
+define('PARTIALS_PATH', VIEW_PATH . '/Reusable_Components'); 
 
-// If you deploy under a subfolder, set BASE_URL accordingly (e.g., '/Library-Management-System')
 $baseUrlGuess = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
 define('BASE_URL', $baseUrlGuess === '' ? '/' : $baseUrlGuess . '/');
 
-// Simple whitelist router
 $allowedPages = [
-  'home'     => VIEW_PATH . '/Reusable_Components/main.php',
-  'login'    => VIEW_PATH . '/Authentication/login.php',
-  'register' => VIEW_PATH . '/Authentication/register.php',
+  'home'      => VIEW_PATH . '/Reusable_Components/main.php',
+  'login'     => VIEW_PATH . '/Authentication/login.php',
+  'register'  => VIEW_PATH . '/Authentication/register.php',
+  'dashboard' => VIEW_PATH . '/Reusable_Components/dashboard.php', // ← future safe
 ];
 
 $page = $_GET['page'] ?? 'home';
 $viewFile = $allowedPages[$page] ?? $allowedPages['home'];
 
-// Helper to build asset URLs safely
 function asset($path) {
   return BASE_URL . ltrim($path, '/');
 }
@@ -30,11 +27,11 @@ function asset($path) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Library Management System — Modern Landing Page</title>
-  <meta name="description" content="A clean, responsive landing page for an LMS." />
+  <title>Libraria — Library Management System</title>
   <link rel="stylesheet" href="<?= asset('Public/Style/index.css') ?>" />
 </head>
-<body>
+<body class="page-<?= htmlspecialchars($page) ?>">
+
   <a href="#main" class="skip-link">Skip to content</a>
 
   <?php include PARTIALS_PATH . '/header.php'; ?>
@@ -44,5 +41,6 @@ function asset($path) {
   </main>
 
   <?php include PARTIALS_PATH . '/footer.php'; ?>
+
 </body>
 </html>

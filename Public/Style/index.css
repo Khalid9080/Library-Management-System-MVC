@@ -32,14 +32,9 @@
     }
 }
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html,
-body {
-    height: 100%;
-}
+html, body { height: 100%; }
 
 body {
     margin: 0;
@@ -53,20 +48,21 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-    color: inherit;
-    text-decoration: none;
+/* ===== Layout: sticky footer (added) ===== */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
+header { flex: 0 0 auto; }
+main   { flex: 1 0 auto; }
+footer { flex: 0 0 auto; margin-top: auto; }
+/* ======================================== */
 
-img {
-    max-width: 100%;
-    display: block;
-}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
 
-.container {
-    width: min(100% - 2rem, var(--maxw));
-    margin-inline: auto;
-}
+.container { width: min(100% - 2rem, var(--maxw)); margin-inline: auto; }
 
 .skip-link {
     position: absolute;
@@ -76,7 +72,6 @@ img {
     height: 1px;
     overflow: hidden;
 }
-
 .skip-link:focus {
     left: 1rem;
     top: 1rem;
@@ -103,8 +98,8 @@ header {
 .nav {
     display: flex;
     align-items: center;
-    gap: 1.25rem;           /* was 1rem */
-    padding: 1.4rem 0; 
+    gap: 1.25rem;
+    padding: 1.4rem 0;
 }
 
 .brand {
@@ -116,7 +111,7 @@ header {
 }
 
 .brand-logo {
-    width: 48px;            /* was 36px */
+    width: 48px;
     height: 48px;
     display: grid;
     place-items: center;
@@ -126,21 +121,19 @@ header {
 }
 
 /* Push the whole nav to the right so Quick Signup sits at the far edge */
-nav {
-    margin-left: auto;
-}
+nav { margin-left: auto; }
 
 nav ul {
     display: flex;
     gap: 2rem;
     list-style: none;
-    margin: 0;              /* was: 0 0 0 auto */
+    margin: 0;
     padding: 0;
 }
 
 nav a {
     opacity: .9;
-    padding: .9rem 1.2rem;  /* was .5rem .75rem */
+    padding: .9rem 1.2rem;
     border-radius: 12px;
     transition: background-color .18s ease, transform .18s ease;
 }
@@ -160,7 +153,6 @@ nav a:hover {
     box-shadow: 0 8px 20px color-mix(in srgb, var(--brand) 30%, transparent);
     transition: transform .22s ease, box-shadow .22s ease;
 }
-
 .cta:hover {
     transform: translateY(-1px);
     box-shadow: 0 12px 28px color-mix(in srgb, var(--brand) 38%, transparent);
@@ -169,10 +161,7 @@ nav a:hover {
 /* =============================
    Hero
 ============================== */
-.hero {
-    padding: 7rem 0 4.5rem;
-    position: relative;
-}
+.hero { padding: 7rem 0 4.5rem; position: relative; }
 
 .hero-grid {
     display: grid;
@@ -193,10 +182,7 @@ nav a:hover {
     border: 1px solid color-mix(in srgb, var(--brand) 40%, transparent);
 }
 
-.eyebrow svg {
-    width: 16px;
-    height: 16px;
-}
+.eyebrow svg { width: 16px; height: 16px; }
 
 h1 {
     font-size: clamp(2rem, 4vw + 1rem, 3.5rem);
@@ -227,22 +213,14 @@ h1 {
     font-weight: 600;
     transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, filter .22s ease;
 }
-
 .btn.primary {
     background: linear-gradient(135deg, var(--brand), var(--brand-strong));
     color: white;
     border: none;
     box-shadow: 0 10px 30px color-mix(in srgb, var(--brand) 28%, transparent);
 }
-
-.btn.ghost {
-    background: transparent;
-    color: var(--text);
-}
-
-.btn:hover {
-    transform: translateY(-1px);
-}
+.btn.ghost { background: transparent; color: var(--text); }
+.btn:hover { transform: translateY(-1px); }
 
 /* Card preview block */
 .card-preview {
@@ -265,7 +243,6 @@ h1 {
     border-radius: 12px;
     padding: .5rem;
 }
-
 .search input {
     background: transparent;
     border: none;
@@ -274,7 +251,6 @@ h1 {
     color: var(--text);
     font-size: 1rem;
 }
-
 .search button {
     border: none;
     background: var(--brand);
@@ -290,7 +266,7 @@ h1 {
     filter: brightness(1.03);
 }
 
-/* Quick Signup — cyan like primary & pinned to far right via nav margin-left:auto */
+/* Quick Signup */
 .quick-signup {
     background: linear-gradient(135deg, var(--brand), var(--brand-strong));
     color: #fff;
@@ -308,7 +284,7 @@ h1 {
     filter: brightness(1.03);
 }
 
-/* Shared hover/elevation for all card-like elements */
+/* Shared hover/elevation */
 .feature,
 .card-preview,
 .stat,
@@ -340,7 +316,6 @@ h1 {
     gap: 1rem;
     margin-top: 1rem;
 }
-
 .meta .pill {
     background: color-mix(in srgb, var(--accent) 14%, transparent);
     border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
@@ -354,15 +329,8 @@ h1 {
 /* =============================
    Trust & Features
 ============================== */
-.trust {
-    padding: 2rem 0 0;
-    opacity: .95;
-}
-
-.trust small {
-    color: var(--muted);
-    letter-spacing: .2px;
-}
+.trust { padding: 2rem 0 0; opacity: .95; }
+.trust small { color: var(--muted); letter-spacing: .2px; }
 
 .logo-row {
     display: grid;
@@ -371,7 +339,6 @@ h1 {
     margin-top: .75rem;
     opacity: .85;
 }
-
 .logo {
     background: color-mix(in srgb, var(--text) 6%, transparent);
     border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
@@ -383,20 +350,12 @@ h1 {
 }
 
 /* Sections */
-.section {
-    padding: 5.5rem 0;
-    margin-top: 2rem; 
-}
-
+.section { padding: 5.5rem 0; margin-top: 2rem; }
 .section h2 {
     font-size: clamp(1.6rem, 2vw + 1rem, 2.2rem);
     margin: 0 0 .5rem;
 }
-
-.section p.section-lead {
-    color: var(--muted);
-    max-width: 70ch;
-}
+.section p.section-lead { color: var(--muted); max-width: 70ch; }
 
 /* Features grid */
 .features {
@@ -405,7 +364,6 @@ h1 {
     gap: 1rem;
     margin-top: 1.25rem;
 }
-
 .feature {
     background: var(--card);
     border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
@@ -413,17 +371,8 @@ h1 {
     padding: 1.25rem;
     box-shadow: var(--shadow);
 }
-
-.feature h3 {
-    margin: .35rem 0 .4rem;
-    font-size: 1.1rem;
-}
-
-.feature p {
-    color: var(--muted);
-    font-size: .98rem;
-}
-
+.feature h3 { margin: .35rem 0 .4rem; font-size: 1.1rem; }
+.feature p { color: var(--muted); font-size: .98rem; }
 .icon {
     width: 36px;
     height: 36px;
@@ -443,7 +392,6 @@ h1 {
     gap: 1rem;
     margin-top: 1.25rem;
 }
-
 .stat {
     background: color-mix(in srgb, var(--text) 6%, transparent);
     border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
@@ -451,16 +399,8 @@ h1 {
     padding: 1.25rem;
     text-align: center;
 }
-
-.stat b {
-    display: block;
-    font-size: 1.6rem;
-}
-
-.stat span {
-    color: var(--muted);
-    font-size: .95rem;
-}
+.stat b { display: block; font-size: 1.6rem; }
+.stat span { color: var(--muted); font-size: .95rem; }
 
 /* =============================
    Testimonial / CTA
@@ -473,11 +413,7 @@ h1 {
     display: grid;
     gap: .75rem;
 }
-
-.quote footer {
-    color: var(--muted);
-    font-size: .95rem;
-}
+.quote footer { color: var(--muted); font-size: .95rem; }
 
 .cta-wide {
     display: grid;
@@ -494,33 +430,23 @@ h1 {
 /* =============================
    Footer
 ============================== */
-footer {
-    padding: 2.5rem 0 3rem;
-    color: var(--muted);
-}
+footer { padding: 2.5rem 0 3rem; color: var(--muted); }
 
 .foot {
     display: grid;
     grid-template-columns: 1.2fr .8fr;
     gap: 1rem;
 }
-
 .foot .cols {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
-
-.foot h4 {
-    margin: 0 0 .6rem;
-    color: var(--text);
-}
-
+.foot h4 { margin: 0 0 .6rem; color: var(--text); }
 .foot a {
     color: var(--muted);
     transition: color .18s ease, transform .18s ease;
 }
-
 .foot a:hover {
     color: var(--text);
     transform: translateY(-1px);
@@ -530,40 +456,23 @@ footer {
    Responsiveness
 ============================== */
 @media (max-width: 960px) {
-    nav ul {
-        display: none;
-    }
-
+    nav ul { display: none; }
     .hero-grid,
     .features,
     .stats,
     .logo-row,
     .foot .cols,
-    .cta-wide {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .cta-wide {
-        grid-template-columns: 1fr;
-    }
+    .cta-wide { grid-template-columns: 1fr 1fr; }
+    .cta-wide { grid-template-columns: 1fr; }
 }
-
 @media (max-width: 680px) {
-    .hero {
-        padding-top: 3rem;
-    }
-
+    .hero { padding-top: 3rem; }
     .hero-grid,
     .features,
     .stats,
     .logo-row,
-    .foot {
-        grid-template-columns: 1fr;
-    }
-
-    .meta {
-        grid-template-columns: 1fr 1fr;
-    }
+    .foot { grid-template-columns: 1fr; }
+    .meta { grid-template-columns: 1fr 1fr; }
 }
 
 /* =============================
@@ -593,4 +502,12 @@ footer {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
     border-radius: 8px;
+}
+
+/* ===== Optional: register page backdrop without touching global body ===== */
+.page-register main {
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: #f8fafc; /* light page background only within main on register page */
 }

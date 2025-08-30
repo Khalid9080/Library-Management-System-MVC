@@ -1,69 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimal Login Form</title>
-    <link rel="stylesheet" href="../../../Public/Style/login.css">
-</head>
-<body>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <h2>Sign In</h2>
-                <p>Enter your credentials to continue</p>
-            </div>
-            
-            <form class="login-form" id="loginForm" novalidate>
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <input type="email" id="email" name="email" required autocomplete="email">
-                        <label for="email">Email</label>
-                    </div>
-                    <span class="error-message" id="emailError"></span>
-                </div>
+<link rel="stylesheet" href="<?= asset('Public/Style/login.css') ?>" />
+<script src="<?= asset('Public/JS/login.js') ?>?v=<?= time() ?>" defer></script>
 
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <input type="password" id="password" name="password" required autocomplete="current-password">
-                        <label for="password">Password</label>
-                        <button type="button" class="password-toggle" id="passwordToggle" aria-label="Toggle password visibility">
-                            <span class="toggle-icon"></span>
-                        </button>
-                    </div>
-                    <span class="error-message" id="passwordError"></span>
-                </div>
-
-                <div class="form-options">
-                    <div class="remember-wrapper">
-                        <input type="checkbox" id="remember" name="remember">
-                        <label for="remember" class="checkbox-label">
-                            <span class="checkmark"></span>
-                            Remember me
-                        </label>
-                    </div>
-                    <a href="#" class="forgot-password">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="login-btn">
-                    <span class="btn-text">Sign In</span>
-                    <span class="btn-loader"></span>
-                </button>
-            </form>
-
-            <div class="signup-link">
-                <p>Don't have an account? <a href="#">Create one</a></p>
-            </div>
-
-            <div class="success-message" id="successMessage">
-                <div class="success-icon">✓</div>
-                <h3>Welcome back!</h3>
-                <p>Redirecting to your dashboard...</p>
-            </div>
-        </div>
+<div class="login-container">
+  <div class="login-card" role="form" aria-labelledby="loginTitle">
+    <div class="login-header">
+      <h2 id="loginTitle">Sign in</h2>
+      <p>Welcome back. Please enter your details.</p>
     </div>
 
-    <script src="../../shared/js/form-utils.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+    <form id="loginForm" novalidate>
+      <div class="form-grid">
+        <!-- Email -->
+        <div class="form-group">
+          <div class="input-wrapper">
+            <input type="email" id="email" name="email" required placeholder=" " autocomplete="email" />
+            <label for="email">Email</label>
+          </div>
+          <span class="error-message" id="emailError" aria-live="polite"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <div class="input-wrapper">
+            <input type="password" id="password" name="password" required placeholder=" " minlength="8" autocomplete="current-password" />
+            <label for="password">Password</label>
+            <button type="button" class="password-toggle" data-target="password" aria-label="Toggle password visibility">
+              <span class="toggle-icon"></span>
+            </button>
+          </div>
+          <span class="error-message" id="passwordError" aria-live="polite"></span>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="login-btn" id="submitBtn">
+          <span class="btn-text">Sign in</span>
+          <span class="btn-loader"></span>
+        </button>
+      </div>
+    </form>
+
+    <p class="meta-text">Don’t have an account?
+      <a href="<?= BASE_URL ?>index.php?page=register" id="toRegister">Create one</a>
+    </p>
+
+    <div class="success-message" id="successMessage" role="status" aria-live="polite">
+      <div class="success-icon">✓</div>
+      <h3>Signed in!</h3>
+      <p>Redirecting to your dashboard…</p>
+    </div>
+  </div>
+</div>
+
+<!-- Small inline helper for password toggle (no extra JS file needed) -->
+<script>
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('.password-toggle')) {
+      const btn = e.target.closest('.password-toggle');
+      const input = document.getElementById(btn.dataset.target);
+      if (!input) return;
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+  });
+</script>

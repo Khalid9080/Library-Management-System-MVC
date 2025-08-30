@@ -1,135 +1,319 @@
+/* =============================
+   Register Page (scoped)
+============================== */
 
-    /* Minimal Registration Form - Complete & Self-Contained */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-      background: #f8fafc;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      line-height: 1.6;
-    }
-    .register-container { width: 100%; max-width: 520px; }
-    .register-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 32px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.1);
-      transition: all .2s ease;
-    }
-    .register-card:hover { box-shadow: 0 4px 6px rgba(0,0,0,.1); }
+.page-register main {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #f8fafc;
+  /* page backdrop only here */
+}
 
-    .register-header { text-align: center; margin-bottom: 24px; }
-    .register-header h2 { color:#1a202c; font-size:1.75rem; font-weight:600; margin-bottom:8px; }
-    .register-header p { color:#718096; font-size:14px; }
+/* Container & Card */
+.page-register .register-container {
+  width: 100%;
+  max-width: 520px;
+}
 
-    /* Grid for two-column moments on wider screens */
-    .form-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    @media (min-width: 560px) {
-      .form-grid.two { grid-template-columns: 1fr 1fr; }
-    }
+.page-register .register-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+  transition: box-shadow .2s ease, transform .2s ease;
+}
 
-    /* Form Group & Input Styles */
-    .form-group { position: relative; }
-    .input-wrapper { position: relative; display: flex; flex-direction: column; }
-    .input-wrapper input,
-    .input-wrapper select {
-      background: #ffffff;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      padding: 12px 16px;
-      color: #1a202c;
-      font-size: 16px;
-      font-weight: 400;
-      transition: all .2s ease;
-      width: 100%;
-      outline: none;
-      appearance: none;
-    }
-    .input-wrapper input:focus,
-    .input-wrapper select:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.1); }
+.page-register .register-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, .1);
+}
 
-    /* Floating labels for inputs */
-    .input-wrapper input + label,
-    .input-wrapper select + label {
-      position: absolute; left: 16px; top: 12px; color:#718096; font-size:16px; font-weight:400;
-      transition: all .2s ease; pointer-events:none; transform-origin: left top; background:#fff; padding:0 4px;
-    }
-    .input-wrapper input:focus + label,
-    .input-wrapper input:not(:placeholder-shown) + label,
-    .input-wrapper select:focus + label,
-    .input-wrapper select:not([value=""]) + label {
-      transform: translateY(-32px) scale(.85);
-      color:#3b82f6; font-weight:500;
-    }
+.page-register .register-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
 
-    /* Dropdown caret */
-    .select-wrapper { position: relative; }
-    .select-caret {
-      position: absolute; right: 12px; top: 50%;
-      /* lift the caret slightly above true center */
-      transform: translateY(-58%);
-      pointer-events: none; width: 18px; height: 18px;
-      background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23718096' stroke-width='1.5'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3e%3c/svg%3e");
-      background-size: contain; background-repeat:no-repeat; background-position:center;
-    }
+.page-register .register-header h2 {
+  color: #1a202c;
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
 
-    /* Password Toggle */
-    .password-toggle { position:absolute; right:12px; top:50%; transform:translateY(-50%);
-      background:none; border:none; cursor:pointer; padding:0; color:#718096; transition:color .2s ease; z-index:3;
-      width:36px; height:36px; display:flex; align-items:center; justify-content:center; }
-    .password-toggle:focus { outline: none; }
-    .password-toggle:hover { color:#3b82f6; }
-    .toggle-icon { display:block; width:22px; height:22px; background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23718096' stroke-width='1.5'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'/%3e%3c/svg%3e"); background-size:contain; background-repeat:no-repeat; background-position:center; transition: background-image .2s ease; }
-    .password-toggle:hover .toggle-icon { background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%233b82f6' stroke-width='1.5'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'/%3e%3c/svg%3e"); }
+.page-register .register-header p {
+  color: #718096;
+  font-size: 14px;
+}
 
-    /* Extra padding for inputs that get a toggle button */
-    .input-wrapper input#password,
-    .input-wrapper input#confirmPassword,
-    .input-wrapper input[type="text"]#password,
-    .input-wrapper input[type="text"]#confirmPassword { padding-right: 48px; }
+/* Grid (single column, extra spacing) */
+.page-register .form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  /* more space between fields */
+}
 
-    /* Error States */
-    .error-message { color:#dc2626; font-size:12px; font-weight:500; margin-top:6px; margin-left:4px; opacity:0; transform:translateY(-10px); transition: all .2s ease; }
-    .error-message.show { opacity:1; transform:translateY(0); }
-    .form-group.error .input-wrapper input,
-    .form-group.error .input-wrapper select { border-color:#dc2626; box-shadow:0 0 0 3px rgba(220,38,38,.1); }
+/* Inputs & Selects (no select used, but safe to keep) */
+.page-register .form-group {
+  position: relative;
+}
 
-    /* Submit Button */
-    .register-btn { width:100%; background:#3b82f6; border:none; border-radius:6px; padding:12px 24px; color:#fff; font-size:16px; font-weight:500; cursor:pointer; transition: all .2s ease; position:relative; margin: 8px 0 20px; }
-    .register-btn:hover { background:#2563eb; transform: translateY(-1px); box-shadow:0 4px 6px rgba(59,130,246,.2); }
-    .register-btn:active { transform: translateY(0); }
-    .register-btn.loading { pointer-events:none; background:#9ca3af; }
-    .btn-text { transition: opacity .2s ease; }
-    .btn-loader { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:16px; height:16px; border:2px solid transparent; border-top:2px solid white; border-radius:50%; opacity:0; animation: spin 1s linear infinite; transition: opacity .2s ease; }
-    .register-btn.loading .btn-text { opacity:0; }
-    .register-btn.loading .btn-loader { opacity:1; }
+.page-register .input-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
 
-    /* Success */
-    .success-message { display:none; text-align:center; padding: 24px 16px; opacity:0; transform: translateY(20px); transition: all .3s ease; }
-    .success-message.show { display:block; opacity:1; transform: translateY(0); }
-    .success-icon { width:48px; height:48px; background:#059669; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; margin:0 auto 12px; }
-    .success-message h3 { color:#1a202c; font-size:1.25rem; margin-bottom:6px; }
-    .success-message p { color:#718096; font-size:14px; }
+.page-register .input-wrapper input,
+.page-register .input-wrapper select {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 12px 16px;
+  color: #1a202c;
+  font-size: 16px;
+  font-weight: 400;
+  transition: border-color .2s ease, box-shadow .2s ease;
+  width: 100%;
+  outline: none;
+  appearance: none;
+}
 
-    /* Aux */
-    .meta-text { text-align:center; color:#718096; font-size:14px; }
-    .meta-text a { color:#3b82f6; text-decoration:none; font-weight:500; }
-    .meta-text a:hover { color:#2563eb; }
+.page-register .input-wrapper input:focus,
+.page-register .input-wrapper select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, .1);
+}
 
-    @keyframes spin { 0%{ transform:translate(-50%,-50%) rotate(0)} 100%{ transform:translate(-50%,-50%) rotate(360deg)} }
+/* Floating Labels */
+.page-register .input-wrapper input+label,
+.page-register .input-wrapper select+label {
+  position: absolute;
+  left: 16px;
+  top: 12px;
+  color: #718096;
+  font-size: 16px;
+  font-weight: 400;
+  transition: transform .2s ease, color .2s ease;
+  pointer-events: none;
+  transform-origin: left top;
+  background: #fff;
+  padding: 0 4px;
+}
 
-    /* Mobile */
-    @media (max-width: 480px) {
-      body { padding: 16px; }
-      .register-card { padding: 24px; }
-      .register-header h2 { font-size: 1.5rem; }
-    }
- 
+.page-register .input-wrapper input:focus+label,
+.page-register .input-wrapper input:not(:placeholder-shown)+label,
+.page-register .input-wrapper select:focus+label,
+.page-register .input-wrapper select:not([value=""])+label {
+  transform: translateY(-32px) scale(.85);
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+/* Password toggles */
+.page-register .password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #718096;
+  transition: color .2s ease;
+  z-index: 3;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-register .password-toggle:hover {
+  color: #3b82f6;
+}
+
+.page-register .toggle-icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23718096' stroke-width='1.5'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'/%3e%3c/svg%3e");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: background-image .2s ease;
+}
+
+.page-register .password-toggle:hover .toggle-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%233b82f6' stroke-width='1.5'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'/%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'/%3e%3c/svg%3e");
+}
+
+/* Extra padding for password fields with toggle button */
+.page-register .input-wrapper input#password,
+.page-register .input-wrapper input#confirmPassword,
+.page-register .input-wrapper input[type="text"]#password,
+.page-register .input-wrapper input[type="text"]#confirmPassword {
+  padding-right: 48px;
+}
+
+/* Errors (animated like your reference) */
+.page-register .error-message {
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 6px;
+  margin-left: 4px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.page-register .error-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-register .form-group.error .input-wrapper input,
+.page-register .form-group.error .input-wrapper select {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, .1);
+}
+
+/* Submit button (with spinner) */
+.page-register .register-btn {
+  width: 100%;
+  background: #3b82f6;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+  position: relative;
+  margin: 6px 0 6px;
+}
+
+.page-register .register-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(59, 130, 246, .2);
+}
+
+.page-register .register-btn:active {
+  transform: translateY(0);
+}
+
+.page-register .register-btn.loading {
+  pointer-events: none;
+  background: #9ca3af;
+}
+
+.page-register .btn-text {
+  transition: opacity .2s ease;
+}
+
+.page-register .btn-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  opacity: 0;
+  animation: spin 1s linear infinite;
+  transition: opacity .2s ease;
+}
+
+.page-register .register-btn.loading .btn-text {
+  opacity: 0;
+}
+
+.page-register .register-btn.loading .btn-loader {
+  opacity: 1;
+}
+
+/* Success message (animated) */
+.page-register .success-message {
+  display: none;
+  text-align: center;
+  padding: 24px 16px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+.page-register .success-message.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-register .success-icon {
+  width: 48px;
+  height: 48px;
+  background: #059669;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  margin: 0 auto 12px;
+}
+
+.page-register .success-message h3 {
+  color: #1a202c;
+  font-size: 1.25rem;
+  margin-bottom: 6px;
+}
+
+.page-register .success-message p {
+  color: #718096;
+  font-size: 14px;
+}
+
+/* Aux */
+.page-register .meta-text {
+  text-align: center;
+  color: #718096;
+  font-size: 14px;
+}
+
+.page-register .meta-text a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.page-register .meta-text a:hover {
+  color: #2563eb;
+}
+
+/* Animations */
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0)
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg)
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .page-register .register-card {
+    padding: 24px;
+  }
+
+  .page-register .register-header h2 {
+    font-size: 1.5rem;
+  }
+}

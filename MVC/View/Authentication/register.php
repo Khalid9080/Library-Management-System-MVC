@@ -1,5 +1,6 @@
-<link rel="stylesheet" href="<?= BASE_URL ?>Public/Style/register.css" />
-<script src="<?= BASE_URL ?>Public/JS/register.js" defer></script>
+<link rel="stylesheet" href="<?= asset('Public/Style/register.css') ?>" />
+<script src="<?= asset('Public/JS/register.js') ?>?v=<?= time() ?>" defer></script>
+
 
 <div class="register-container">
   <div class="register-card" role="form" aria-labelledby="registerTitle">
@@ -9,7 +10,7 @@
     </div>
 
     <form id="registerForm" novalidate>
-      <div class="form-grid two">
+      <div class="form-grid">
         <div class="form-group">
           <div class="input-wrapper">
             <input type="text" id="username" name="username" required minlength="2" maxlength="40" placeholder=" " autocomplete="username" />
@@ -25,9 +26,7 @@
           </div>
           <span class="error-message" id="emailError" aria-live="polite"></span>
         </div>
-      </div>
 
-      <div class="form-grid two">
         <div class="form-group">
           <div class="input-wrapper">
             <input type="tel" id="phone" name="phone" required placeholder=" " autocomplete="tel" pattern="^[0-9()+\-\s]{7,20}$" />
@@ -36,22 +35,6 @@
           <span class="error-message" id="phoneError" aria-live="polite"></span>
         </div>
 
-        <div class="form-group select-wrapper">
-          <div class="input-wrapper">
-            <select id="role" name="role" required>
-              <option value="" disabled selected hidden></option>
-              <option value="Member">Member</option>
-              <option value="Librarian">Librarian</option>
-              <option value="Admin">Admin</option>
-            </select>
-            <label for="role">Register As</label>
-          </div>
-          <span class="select-caret" aria-hidden="true"></span>
-          <span class="error-message" id="roleError" aria-live="polite"></span>
-        </div>
-      </div>
-
-      <div class="form-grid two">
         <div class="form-group">
           <div class="input-wrapper">
             <input type="password" id="password" name="password" required placeholder=" " minlength="8" autocomplete="new-password" />
@@ -73,12 +56,12 @@
           </div>
           <span class="error-message" id="confirmPasswordError" aria-live="polite"></span>
         </div>
-      </div>
 
-      <button type="submit" class="register-btn" id="submitBtn">
-        <span class="btn-text">Create Account</span>
-        <span class="btn-loader"></span>
-      </button>
+        <button type="submit" class="register-btn" id="submitBtn">
+          <span class="btn-text">Create Account</span>
+          <span class="btn-loader"></span>
+        </button>
+      </div>
     </form>
 
     <p class="meta-text">Already have an account? <a href="<?= BASE_URL ?>index.php?page=login" id="toLogin">Sign in</a></p>
