@@ -10,10 +10,17 @@ $username = $user['username'] ?? 'User';
 // Normalized role label for heading & logo
 $roleHeading = ucfirst($role); // Member / Librarian / Admin
 $isLibrarian = ($role === 'librarian');
+
+// Decide if we should show a form inside the main panel
+$panel = $_GET['panel'] ?? null;               // 'add_book' or 'update_book'
+$showForm = $isLibrarian && in_array($panel, ['add_book','update_book'], true);
 ?>
 <!-- NOTE: add a version to bust cache -->
 <link rel="stylesheet" href="<?= asset('Public/Style/librarian-table.css') ?>?v=<?= time() ?>" />
 <link rel="stylesheet" href="<?= asset('Public/Style/dashboard.css') ?>?v=<?= time() ?>" />
+<?php if ($showForm): ?>
+  <link rel="stylesheet" href="<?= asset('Public/Style/librarian-forms.css') ?>?v=<?= time() ?>" />
+<?php endif; ?>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
@@ -205,8 +212,6 @@ $isLibrarian = ($role === 'librarian');
     box-shadow: 0 2px 8px rgba(122, 31, 31, .10);
   }
 
-  /* Tiles etc. keep your existing styles… */
-
   /* ========= Responsive: stack header on small screens ========= */
   @media (max-width: 900px) {
     .page-dashboard .role-dashboard .app-header {
@@ -233,7 +238,6 @@ $isLibrarian = ($role === 'librarian');
             <img src="https://assets.codepen.io/285131/almeria-logo.svg" alt="LMS logo" />
           </span>
           <h1 class="logo-title">
-            <!-- Replace "Almeria / NeoBank" with dynamic role -->
             <span><?= htmlspecialchars($roleHeading, ENT_QUOTES, 'UTF-8') ?></span>
             <span>Dashboard</span>
           </h1>
@@ -252,7 +256,7 @@ $isLibrarian = ($role === 'librarian');
         <nav class="navigation" aria-label="Dashboard navigation">
           <?php if ($isLibrarian): ?>
             <!-- Librarian: now three items: Dashboard, Approved Buy Requests, Buy History -->
-            <a href="#">
+            <a href="<?= asset('index.php?page=dashboard') ?>">
               <i class="ph-house"></i>
               <span>Dashboard</span>
             </a>
@@ -293,98 +297,88 @@ $isLibrarian = ($role === 'librarian');
           <?php endif; ?>
         </nav>
 
-
         <!-- Logout stays, CSS pushes it to the bottom -->
         <button class="logout-button" id="logoutBtn" aria-label="Logout">Logout</button>
       </div>
 
       <div class="app-body-main-content">
-        <section class="service-section">
-          <h2>Service</h2>
+        <?php if ($showForm && $panel === 'add_book'): ?>
+          <?php include __DIR__ . '/../Dashboard/Librarian/add_book.php'; ?>
 
-          <div class="tiles">
-            <!-- Tile 1 -->
-            <article class="tile">
-              <!-- (unchanged tile 1) -->
-              <div class="tile-header">
-                <i class="ph-lightning-light"></i>
-                <h3>
-                  <?php if ($isLibrarian): ?>
+        <?php elseif ($showForm && $panel === 'update_book'): ?>
+          <?php include __DIR__ . '/../Dashboard/Librarian/update_book.php'; ?>
+
+        <?php else: ?>
+          <!-- Default dashboard center panel (Service + Table) -->
+          <section class="service-section">
+            <h2>Service</h2>
+
+            <div class="tiles">
+              <!-- Tile 1 -->
+              <article class="tile">
+                <div class="tile-header">
+                  <i class="ph-lightning-light"></i>
+                  <h3><a href="<?= $isLibrarian ? asset('index.php?page=dashboard&panel=add_book') : '#' ?>">
                     <span>Adding New Books</span>
-                  <?php else: ?>
-                    <span>Electricity</span>
-                    <span>UrkEnergo LTD.</span>
-                  <?php endif; ?>
-                </h3>
-              </div>
-              <a href="#">
-                <span>Go to service</span>
-                <span class="icon-button">
-                  <i class="ph-caret-right-bold"></i>
-                </span>
-              </a>
-            </article>
+                  </a></h3>
+                </div>
+                <a href="<?= $isLibrarian ? asset('index.php?page=dashboard&panel=add_book') : '#' ?>">
+                  <span>Go to service</span>
+                  <span class="icon-button">
+                    <i class="ph-caret-right-bold"></i>
+                  </span>
+                </a>
+              </article>
 
-            <!-- Tile 2 -->
-            <article class="tile">
-              <div class="tile-header">
-                <i class="ph-fire-simple-light"></i>
-                <h3>
-                  <?php if ($isLibrarian): ?>
+              <!-- Tile 2 -->
+              <article class="tile">
+                <div class="tile-header">
+                  <i class="ph-fire-simple-light"></i>
+                  <h3>
                     <span>Update Books Info</span>
-                  <?php else: ?>
-                    <span>Heating Gas</span>
-                    <span>Gazprom UA</span>
-                  <?php endif; ?>
-                </h3>
-              </div>
-              <a href="#">
-                <span>Go to service</span>
-                <span class="icon-button">
-                  <i class="ph-caret-right-bold"></i>
-                </span>
-              </a>
-            </article>
+                  </h3>
+                </div>
+                <a href="<?= $isLibrarian ? asset('index.php?page=dashboard&panel=update_book') : '#' ?>">
+                  <span>Go to service</span>
+                  <span class="icon-button">
+                    <i class="ph-caret-right-bold"></i>
+                  </span>
+                </a>
+              </article>
 
-            <!-- Tile 3 -->
-            <article class="tile tile-remove-books">
-              <div class="tile-header">
-                <i class="ph-file-light"></i>
-                <h3>
-                  <?php if ($isLibrarian): ?>
+              <!-- Tile 3 -->
+              <article class="tile tile-remove-books">
+                <div class="tile-header">
+                  <i class="ph-file-light"></i>
+                  <h3>
                     <span>Remove Books From the Library</span>
-                  <?php else: ?>
-                    <span>Tax online</span>
-                    <span>Kharkov 62 str.</span>
-                  <?php endif; ?>
-                </h3>
-              </div>
-              <a href="#">
-                <span>Go to service</span>
-                <span class="icon-button">
-                  <i class="ph-caret-right-bold"></i>
-                </span>
-              </a>
-            </article>
-          </div>
-        </section>
+                  </h3>
+                </div>
+                <a href="#">
+                  <span>Go to service</span>
+                  <span class="icon-button">
+                    <i class="ph-caret-right-bold"></i>
+                  </span>
+                </a>
+              </article>
+            </div>
+          </section>
 
-        <?php if ($isLibrarian): ?>
-          <?php
-          // Include and render the reusable table component
-          require_once __DIR__ . '/../Dashboard/Librarian/LibrarianTable.php';
-          // Optional: pass custom data later: render_librarian_table($rowsFromDb);
-          render_librarian_table(); // demo data for now
-          ?>
+          <?php if ($isLibrarian): ?>
+            <?php
+              // Include and render the reusable table component
+              require_once __DIR__ . '/../Dashboard/Librarian/LibrarianTable.php';
+              // Optional: pass custom data later: render_librarian_table($rowsFromDb);
+              render_librarian_table(); // demo data for now
+            ?>
+          <?php endif; ?>
         <?php endif; ?>
-
-
       </div>
     </div>
 </section>
 
 <script>
-  // Optional convenience: call your existing logout action and follow its redirect
+  // Logout (unchanged)
   document.addEventListener('click', function (e) {
     const btn = e.target.closest('#logoutBtn');
     if (!btn) return;
@@ -405,7 +399,6 @@ $isLibrarian = ($role === 'librarian');
         if (data && data.ok && data.redirect) {
           window.location = data.redirect;
         } else {
-          // Fallback: force to login if controller didn't return JSON as expected
           window.location = root + 'index.php?page=login';
         }
       })

@@ -1,0 +1,129 @@
+/* Librarian forms — consistent with register page look/feel */
+.librarian-form-wrap {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 8px 20px rgba(9, 30, 66, .08);
+}
+
+.librarian-form-header {
+  margin-bottom: 12px;
+}
+.librarian-form-header h2 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  color: #0b1b33;
+}
+.librarian-form-header p {
+  margin: 0;
+  color: #6b7f99;
+  font-size: .98rem;
+}
+
+.librarian-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.librarian-form .full { grid-column: 1 / -1; }
+
+.input-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group input,
+.input-group select {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: #0b1b33;
+  font-size: 16px;
+  transition: border-color .2s ease, box-shadow .2s ease;
+  outline: none;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, .1);
+}
+
+.input-group label {
+  margin-bottom: 6px;
+  color: #33536b;
+  font-weight: 600;
+  font-size: .95rem;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 6px;
+  margin-left: 2px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.error-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.input-group.error input,
+.input-group.error select {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, .1);
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+.btn-primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(59, 130, 246, .2);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-ghost {
+  background: transparent;
+  color: #0b1b33;
+  border: 1px solid rgba(31,31,31,.15);
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+.btn-ghost:hover {
+  background: #f8fafc;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
+}
+
+/* Make it responsive */
+@media (max-width: 900px) {
+  .librarian-form { grid-template-columns: 1fr; }
+}

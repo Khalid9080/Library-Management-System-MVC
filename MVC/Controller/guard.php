@@ -21,14 +21,30 @@ function role_name_from_id(?int $rid): string {
 }
 
 /** Ensure the user is authenticated; else redirect to login */
+// function ensure_auth(): void {
+//     if (!is_logged_in()) {
+//         // IMPORTANT: this path is RELATIVE to the URL of the page calling ensure_auth().
+//         // From /MVC/View/Reusable_Components/dashboard.php, '../Authentication/login.php' is correct.
+//         header('Location: ../Authentication/login.php');
+//         exit;
+//     }
+// }
+
 function ensure_auth(): void {
     if (!is_logged_in()) {
-        // IMPORTANT: this path is RELATIVE to the URL of the page calling ensure_auth().
-        // From /MVC/View/Reusable_Components/dashboard.php, '../Authentication/login.php' is correct.
-        header('Location: ../Authentication/login.php');
+        // Build a stable base URL (works whether BASE_URL is defined or not)
+        $base = defined('BASE_URL')
+          ? BASE_URL
+          : (function () {
+              $guess = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/');
+              return ($guess === '' ? '/' : $guess . '/');
+            })();
+
+        header('Location: ' . $base . 'index.php?page=login');
         exit;
     }
 }
+
 
 /** Current user as an array: ['id','username','email','role_id','role'] or null */
 function auth_user(): ?array {

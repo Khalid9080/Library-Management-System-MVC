@@ -14,7 +14,10 @@ $allowedPages = [
   'login'     => VIEW_PATH . '/Authentication/login.php',
   'register'  => VIEW_PATH . '/Authentication/register.php',
   'dashboard' => VIEW_PATH . '/Reusable_Components/dashboard.php',
-  'forgot'    => VIEW_PATH . '/Authentication/forgot_password.php', // NEW
+  'forgot'    => VIEW_PATH . '/Authentication/forgot_password.php',
+  // NEW:
+  'librarian_add_book'    => VIEW_PATH . '/Dashboard/Librarian/add_book.php',
+  'librarian_update_book' => VIEW_PATH . '/Dashboard/Librarian/update_book.php',
 ];
 
 $page = $_GET['page'] ?? 'home';
