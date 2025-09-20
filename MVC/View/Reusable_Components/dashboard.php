@@ -1,27 +1,414 @@
 <?php
 // MVC/View/Reusable_Components/dashboard.php
 require_once __DIR__ . '/../../Controller/guard.php';
-
-// Redirects to ../Authentication/login.php if not logged in
 ensure_auth();
 
 $user = auth_user(); // ['id','username','email','role_id','role']
 $role = strtolower($user['role'] ?? 'member');
+$username = $user['username'] ?? 'User';
 
-// Choose which dashboard partial to include
-$map = [
-  'member'    => __DIR__ . '/../Dashboard/MemberDashboard.php',
-  'librarian' => __DIR__ . '/../Dashboard/LibrarianDashboard.php',
-  'admin'     => __DIR__ . '/../Dashboard/AdminDashboard.php',
-];
-
-$include = $map[$role] ?? $map['member'];
+// Normalized role label for heading & logo
+$roleHeading = ucfirst($role); // Member / Librarian / Admin
+$isLibrarian = ($role === 'librarian');
 ?>
-<section class="dashboard">
-  <div class="container">
-    <h2>Welcome, <?= htmlspecialchars($user['username'] ?? 'User', ENT_QUOTES, 'UTF-8') ?>!</h2>
-    <p class="muted">Role: <strong><?= htmlspecialchars($role, ENT_QUOTES, 'UTF-8') ?></strong></p>
-    <hr/>
-    <?php include $include; ?>
-  </div>
+<!-- NOTE: add a version to bust cache -->
+<link rel="stylesheet" href="<?= asset('Public/Style/librarian-table.css') ?>?v=<?= time() ?>" />
+<link rel="stylesheet" href="<?= asset('Public/Style/dashboard.css') ?>?v=<?= time() ?>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+  rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/phosphor-icons@1.4.2/src/css/icons.css">
+
+<!-- Inline, librarian-scoped fixes so they apply even if external CSS is stale -->
+<style>
+  /* ---- tokens ---- */
+  :root {
+    --dash-pad: clamp(16px, 2vw, 32px);
+    --sidebar-w: 240px;
+    /* keep in sync with grid/sidebar */
+  }
+
+  /* Scope tweaks to librarian bits you already had */
+  .role-dashboard.role-librarian .service-section>h2 {
+    color: #0b1b33 !important;
+    font-weight: 800 !important;
+  }
+
+  .role-dashboard.role-librarian .welcome-title {
+    color: #fff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+  }
+
+  .role-dashboard.role-librarian .tile.tile-remove-books {
+    background: #ffe3e3 !important;
+    border-color: #ffd0d0 !important;
+  }
+
+  /* Sidebar column should stretch so Logout can sit at bottom */
+  .page-dashboard .role-dashboard .app-body {
+    align-items: stretch;
+  }
+
+  .page-dashboard .role-dashboard .app-body-navigation {
+    height: 100%;
+    min-height: calc(100vh - 220px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .role-dashboard.role-librarian .logout-button {
+    margin-top: auto !important;
+  }
+
+  /* ========= Full-bleed dashboard canvas (no outer gutters) ========= */
+  .page-dashboard .role-dashboard {
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  .page-dashboard .role-dashboard .app {
+    width: 100% !important;
+    /* avoid horizontal scroll; was 100vw */
+    max-width: none !important;
+    min-height: 100vh !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  /* ========= HEADER: put logo & title on the same row ========= */
+  /* 2 columns: sidebar width for the logo, flexible for the title */
+  .page-dashboard .role-dashboard .app-header {
+    display: grid !important;
+    grid-template-columns: var(--sidebar-w) 1fr !important;
+    align-items: center;
+    column-gap: var(--dash-pad);
+    padding: 12px var(--dash-pad) !important;
+  }
+
+  /* Logo container */
+  .role-dashboard .app-header-logo {
+    padding: 0 !important;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  /* Logo pill matches sidebar width */
+  .role-dashboard .app-header-logo .logo {
+    width: 100%;
+    max-width: var(--sidebar-w);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #2f3a48;
+    border: 1px solid #445163;
+    border-radius: 12px;
+    color: #eaf0ff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .08);
+  }
+
+  .role-dashboard .app-header-logo .logo-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, .06);
+  }
+
+  .role-dashboard .app-header-logo .logo-title {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  .role-dashboard .app-header-logo .logo-title span:first-child {
+    font-size: .98rem;
+    font-weight: 700;
+    letter-spacing: .2px;
+  }
+
+  .role-dashboard .app-header-logo .logo-title span:last-child {
+    font-size: .82rem;
+    opacity: .85;
+  }
+
+  /* Welcome title fills the right column (no viewport hacks) */
+  .role-dashboard .welcome-title {
+    margin: 0;
+    padding: 16px 18px;
+    background: #343a40;
+    color: #fff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+    border-radius: 12px;
+    width: 100%;
+    /* fill its grid column */
+  }
+
+  /* ========= MAIN GRID (sidebar + content) ========= */
+  .page-dashboard .role-dashboard .app-body {
+    padding: 24px var(--dash-pad) !important;
+    display: grid;
+    grid-template-columns: var(--sidebar-w) 1fr !important;
+    column-gap: 2rem !important;
+  }
+
+  /* Sidebar panel look */
+  .role-dashboard .app-body-navigation {
+    background: #f2f4f7;
+    border: 1px solid #e4e8f0;
+    border-radius: 12px;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: calc(100vh - 180px);
+  }
+
+  .role-dashboard .navigation a {
+    padding: 8px 10px;
+    border-radius: 8px;
+  }
+
+  .role-dashboard .navigation a:hover {
+    background: rgba(0, 0, 0, .04);
+  }
+
+  /* Logout button styling */
+  .role-dashboard .logout-button {
+    margin-top: auto !important;
+    padding: .45rem 1rem;
+    border: 1px solid rgba(31, 31, 31, .15);
+    background: linear-gradient(180deg, #ffe8e8, #ffdcdc);
+    color: #7a1f1f;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+    transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+    font-weight: 600;
+  }
+
+  .role-dashboard .logout-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(122, 31, 31, .15);
+  }
+
+  .role-dashboard .logout-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(122, 31, 31, .10);
+  }
+
+  /* Tiles etc. keep your existing styles… */
+
+  /* ========= Responsive: stack header on small screens ========= */
+  @media (max-width: 900px) {
+    .page-dashboard .role-dashboard .app-header {
+      grid-template-columns: 1fr !important;
+      row-gap: 10px;
+    }
+
+    .role-dashboard .app-header-logo .logo {
+      max-width: 100%;
+    }
+
+    .page-dashboard .role-dashboard .app-body {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
+
+<section class="role-dashboard role-<?= htmlspecialchars($role, ENT_QUOTES, 'UTF-8') ?>">
+  <div class="app">
+    <header class="app-header">
+      <div class="app-header-logo">
+        <div class="logo">
+          <span class="logo-icon">
+            <img src="https://assets.codepen.io/285131/almeria-logo.svg" alt="LMS logo" />
+          </span>
+          <h1 class="logo-title">
+            <!-- Replace "Almeria / NeoBank" with dynamic role -->
+            <span><?= htmlspecialchars($roleHeading, ENT_QUOTES, 'UTF-8') ?></span>
+            <span>Dashboard</span>
+          </h1>
+        </div>
+      </div>
+
+      <!-- Dynamic welcome line showing role + username -->
+      <h2 class="welcome-title">
+        Welcome to the <?= htmlspecialchars($roleHeading, ENT_QUOTES, 'UTF-8') ?> Dashboard,
+        <?= htmlspecialchars($username, ENT_QUOTES, 'UTF-8') ?>!
+      </h2>
+    </header>
+
+    <div class="app-body">
+      <div class="app-body-navigation">
+        <nav class="navigation" aria-label="Dashboard navigation">
+          <?php if ($isLibrarian): ?>
+            <!-- Librarian: now three items: Dashboard, Approved Buy Requests, Buy History -->
+            <a href="#">
+              <i class="ph-house"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="#">
+              <i class="ph-browsers"></i>
+              <span>Approved Buy Requests</span>
+            </a>
+            <a href="#">
+              <i class="ph-check-square"></i>
+              <span>Buy History</span>
+            </a>
+          <?php else: ?>
+            <!-- Other roles: original six items -->
+            <a href="#">
+              <i class="ph-browsers"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="#">
+              <i class="ph-check-square"></i>
+              <span>Scheduled</span>
+            </a>
+            <a href="#">
+              <i class="ph-swap"></i>
+              <span>Transfers</span>
+            </a>
+            <a href="#">
+              <i class="ph-file-text"></i>
+              <span>Templates</span>
+            </a>
+            <a href="#">
+              <i class="ph-globe"></i>
+              <span>SWIFT</span>
+            </a>
+            <a href="#">
+              <i class="ph-clipboard-text"></i>
+              <span>Exchange</span>
+            </a>
+          <?php endif; ?>
+        </nav>
+
+
+        <!-- Logout stays, CSS pushes it to the bottom -->
+        <button class="logout-button" id="logoutBtn" aria-label="Logout">Logout</button>
+      </div>
+
+      <div class="app-body-main-content">
+        <section class="service-section">
+          <h2>Service</h2>
+
+          <div class="tiles">
+            <!-- Tile 1 -->
+            <article class="tile">
+              <!-- (unchanged tile 1) -->
+              <div class="tile-header">
+                <i class="ph-lightning-light"></i>
+                <h3>
+                  <?php if ($isLibrarian): ?>
+                    <span>Adding New Books</span>
+                  <?php else: ?>
+                    <span>Electricity</span>
+                    <span>UrkEnergo LTD.</span>
+                  <?php endif; ?>
+                </h3>
+              </div>
+              <a href="#">
+                <span>Go to service</span>
+                <span class="icon-button">
+                  <i class="ph-caret-right-bold"></i>
+                </span>
+              </a>
+            </article>
+
+            <!-- Tile 2 -->
+            <article class="tile">
+              <div class="tile-header">
+                <i class="ph-fire-simple-light"></i>
+                <h3>
+                  <?php if ($isLibrarian): ?>
+                    <span>Update Books Info</span>
+                  <?php else: ?>
+                    <span>Heating Gas</span>
+                    <span>Gazprom UA</span>
+                  <?php endif; ?>
+                </h3>
+              </div>
+              <a href="#">
+                <span>Go to service</span>
+                <span class="icon-button">
+                  <i class="ph-caret-right-bold"></i>
+                </span>
+              </a>
+            </article>
+
+            <!-- Tile 3 -->
+            <article class="tile tile-remove-books">
+              <div class="tile-header">
+                <i class="ph-file-light"></i>
+                <h3>
+                  <?php if ($isLibrarian): ?>
+                    <span>Remove Books From the Library</span>
+                  <?php else: ?>
+                    <span>Tax online</span>
+                    <span>Kharkov 62 str.</span>
+                  <?php endif; ?>
+                </h3>
+              </div>
+              <a href="#">
+                <span>Go to service</span>
+                <span class="icon-button">
+                  <i class="ph-caret-right-bold"></i>
+                </span>
+              </a>
+            </article>
+          </div>
+        </section>
+
+        <?php if ($isLibrarian): ?>
+          <?php
+          // Include and render the reusable table component
+          require_once __DIR__ . '/../Dashboard/Librarian/LibrarianTable.php';
+          // Optional: pass custom data later: render_librarian_table($rowsFromDb);
+          render_librarian_table(); // demo data for now
+          ?>
+        <?php endif; ?>
+
+
+      </div>
+    </div>
 </section>
+
+<script>
+  // Optional convenience: call your existing logout action and follow its redirect
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('#logoutBtn');
+    if (!btn) return;
+    const root =
+      (document.querySelector('base')?.href ||
+        (window.APP_BASE_URL || document.baseURI))
+        .replace(/index\.php.*$/, '')
+        .replace(/\/+$/, '') + '/';
+
+    const endpoint = root + 'MVC/Controller/AuthController.php';
+    const body = new FormData();
+    body.append('action', 'logout');
+    body.append('baseUrl', root);
+
+    fetch(endpoint, { method: 'POST', body })
+      .then(r => r.json())
+      .then(data => {
+        if (data && data.ok && data.redirect) {
+          window.location = data.redirect;
+        } else {
+          // Fallback: force to login if controller didn't return JSON as expected
+          window.location = root + 'index.php?page=login';
+        }
+      })
+      .catch(() => { window.location = root + 'index.php?page=login'; });
+  });
+</script>

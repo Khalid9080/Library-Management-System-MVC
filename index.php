@@ -14,6 +14,7 @@ $allowedPages = [
   'login'     => VIEW_PATH . '/Authentication/login.php',
   'register'  => VIEW_PATH . '/Authentication/register.php',
   'dashboard' => VIEW_PATH . '/Reusable_Components/dashboard.php',
+  'forgot'    => VIEW_PATH . '/Authentication/forgot_password.php', // NEW
 ];
 
 $page = $_GET['page'] ?? 'home';
@@ -34,7 +35,8 @@ function asset($path) { return BASE_URL . ltrim($path, '/'); }
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Libraria — Library Management System</title>
-  <link rel="stylesheet" href="<?= asset('Public/Style/index.css') ?>" />
+  <link rel="stylesheet" href="<?= asset('Public/Style/index.css') ?>?v=<?= time() ?>" />
+
 </head>
 <body class="page-<?= htmlspecialchars($page) ?>">
   <a href="#main" class="skip-link">Skip to content</a>

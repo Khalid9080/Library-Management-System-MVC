@@ -1,0 +1,337 @@
+/* Public/Style/neo-dashboard.css */
+/* Scoped so it won't override the rest of the site */
+.role-dashboard {
+  --c-gray-900: #0b1b33;
+  --c-gray-800: #16385b;
+  --c-gray-700: #2a5077;
+  --c-gray-600: #c7d3e6; /* light borders */
+  --c-gray-500: #9db2cf;
+  --c-gray-400: #b7c6dc;
+  --c-gray-300: #d8e3f3;
+  --c-gray-200: #eef4ff;
+  --c-gray-100: #ffffff;
+
+  --c-green-500: #45ffbc;
+  --c-olive-500: #e3ffa8;
+
+  --c-white: var(--c-gray-100);
+
+  --c-text-primary: #0b1b33; /* dark text for light theme */
+  --c-text-secondary: #33536b;
+  --c-text-tertiary: #6a8298;
+
+  /* Layout background inside the section (not body) */
+  display: flex;
+  justify-content: center;
+  padding: 3vw 0;
+  background: #f5f9ff;
+}
+
+.role-dashboard .app {
+  min-height: 80vh;
+  width: 95%;
+  max-width: 1600px;
+  background-color: var(--c-white);
+  padding: 2vw 4vw 6vw;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--c-gray-300);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(13, 35, 69, 0.06);
+}
+
+.role-dashboard .app-header {
+  display: grid;
+  grid-template-columns: minmax(min-content, 175px) 1fr;
+  column-gap: 4rem;
+  align-items: center;
+}
+
+.role-dashboard .welcome-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--c-gray-900);
+}
+
+.role-dashboard .app-body {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(min-content, 175px) minmax(max-content, 1fr);
+  column-gap: 4rem;
+  padding-top: 2.5rem;
+}
+
+.role-dashboard .app-body-navigation {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.role-dashboard .footer { margin-top: auto; padding-top: 1rem; }
+
+.role-dashboard .logo {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--c-gray-600);
+}
+.role-dashboard .logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+}
+.role-dashboard .logo-title {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  margin-left: 0.75rem;
+}
+.role-dashboard .logo-title span:last-child { color: var(--c-text-tertiary); }
+
+.role-dashboard .navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: var(--c-text-tertiary);
+}
+.role-dashboard .navigation a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+.role-dashboard .navigation a i {
+  margin-right: 0.75rem;
+  font-size: 1.25em;
+  flex-shrink: 0;
+}
+.role-dashboard .navigation a + a { margin-top: 1.25rem; }
+.role-dashboard .navigation a:hover,
+.role-dashboard .navigation a:focus {
+  transform: translateX(4px);
+  color: var(--c-text-primary);
+}
+
+/* Styled, smaller logout button */
+.role-dashboard .logout-button {
+  margin-top: auto;
+  padding: .45rem 1rem;
+  border: 1px solid rgba(31,31,31,.15);
+  background: linear-gradient(180deg,#ffffff,#eef6ff);
+  color: var(--c-text-primary);
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+  width: auto;
+  font-weight: 600;
+}
+.role-dashboard .logout-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.10);
+}
+.role-dashboard .logout-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.role-dashboard .service-section > h2 {
+  font-size: 1.5rem; margin-bottom: 1.25rem;
+}
+
+.role-dashboard .tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 1rem;
+  row-gap: 1rem;
+  margin-top: 1.25rem;
+}
+.role-dashboard .tile {
+  padding: 1rem;
+  border-radius: 10px;
+  background-color: var(--c-olive-500);
+  color: var(--c-gray-900);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: 0.25s ease;
+  border: 1px solid var(--c-gray-300);
+}
+.role-dashboard .tile:hover { transform: translateY(-5px); }
+.role-dashboard .tile:nth-child(2) { background-color: var(--c-green-500); }
+.role-dashboard .tile:nth-child(3) { background-color: var(--c-gray-300); }
+
+.role-dashboard .tile-header { display: flex; align-items: center; }
+.role-dashboard .tile-header i { font-size: 2.5em; }
+.role-dashboard .tile-header h3 {
+  display: flex; flex-direction: column;
+  line-height: 1.375; margin-left: 0.5rem;
+}
+.role-dashboard .tile a {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .role-dashboard .app-header { grid-template-columns: 1fr; row-gap: 1rem; }
+  .role-dashboard .app-body {
+    grid-template-columns: 1fr;
+    row-gap: 2rem;
+  }
+  .role-dashboard .tiles { grid-template-columns: 1fr; }
+}
+/* ==== Full-bleed overrides only when we're on the dashboard route ==== */
+.page-dashboard .role-dashboard {
+  /* remove inner page padding + blue backdrop */
+  padding: 0 !important;
+  background: transparent !important;
+  display: block; /* no centering wrapper */
+}
+
+.page-dashboard .role-dashboard .app {
+  /* take the full canvas; drop card chrome */
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 100vh;            /* fill viewport height */
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+
+  /* comfortable page padding */
+  padding: 24px clamp(16px, 2vw, 32px) 32px !important;
+  background: #fff;             /* solid workspace */
+}
+
+/* Wider, fixed sidebar + main content */
+.page-dashboard .role-dashboard .app-header {
+  grid-template-columns: 240px 1fr !important;
+  column-gap: 2rem !important;
+}
+
+.page-dashboard .role-dashboard .app-body {
+  grid-template-columns: 240px 1fr !important;
+  column-gap: 2rem !important;
+  padding-top: 1.5rem !important;
+}
+
+/* Optional: if you still see a thin border from base styles somewhere */
+.page-dashboard .role-dashboard .app,
+.page-dashboard .role-dashboard .tile {
+  border-color: #e9eef5;
+}
+
+/* =========== Tweaks for readability and layout =========== */
+
+/* Make "Service" heading darker and bolder */
+.role-dashboard .service-section > h2 {
+  color: #0b1b33 !important;      /* very dark */
+  font-weight: 800 !important;
+}
+
+/* Make the welcome line whitish with subtle shadow for contrast */
+.role-dashboard .welcome-title {
+  color: #ffffff !important;       /* whitish */
+  text-shadow: 0 1px 2px rgba(0,0,0,.3);
+}
+
+/* Ensure the sidebar column fills the vertical space
+   so the logout button can sit at the bottom */
+.page-dashboard .role-dashboard .app-body {
+  align-items: stretch; /* stretch grid cells */
+}
+.page-dashboard .role-dashboard .app-body-navigation {
+  height: 100%;
+  min-height: calc(100vh - 220px); /* push content down on tall screens */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;  /* nav at top, logout near bottom */
+}
+
+/* Extra guarantee for the button to stick to the bottom */
+.role-dashboard .logout-button {
+  margin-top: auto !important;
+}
+
+/* Librarian-only visual adjustments */
+.role-dashboard.role-librarian .tile:nth-child(3),
+.role-dashboard.role-librarian .tile.tile-remove-books {
+  background-color: #ffe3e3 !important; /* light red */
+  border-color: #ffd0d0 !important;
+}
+
+/* Optional: stronger heading color inside tiles for contrast */
+.role-dashboard.role-librarian .tile-header h3 span:first-child {
+  color: #0b1b33;
+  font-weight: 700;
+}
+
+/* ==== Sidebar (left nav) light gray card ==== */
+.role-dashboard .app-body-navigation {
+  background: #f2f4f7;           /* light gray */
+  border: 1px solid #e4e8f0;
+  border-radius: 12px;
+  padding: 16px 14px;
+}
+
+/* Make each nav item sit nicely on the gray panel */
+.role-dashboard .navigation a {
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+.role-dashboard .navigation a:hover,
+.role-dashboard .navigation a:focus {
+  background: rgba(0,0,0,0.04);
+}
+
+/* ==== Logout button: light red theme ==== */
+.role-dashboard .logout-button {
+  background: linear-gradient(180deg, #ffe8e8, #ffdcdc); /* light red */
+  border-color: #ffc9c9;
+  color: #7a1f1f;                                       /* readable red-brown */
+}
+.role-dashboard .logout-button:hover {
+  background: linear-gradient(180deg, #ffdede, #ffcccc);
+  box-shadow: 0 6px 16px rgba(122,31,31,.15);
+}
+.role-dashboard .logout-button:active {
+  background: linear-gradient(180deg, #ffd6d6, #ffbfbf);
+  box-shadow: 0 2px 8px rgba(122,31,31,.10);
+}
+
+/* Keep it docked near the footer (you already had this, reinforcing here) */
+.role-dashboard .logout-button { margin-top: auto !important; }
+
+/* ==== Shrink the role-based title in the header logo ==== */
+/* This is the "Librarian/Admin/Member" line and the "Dashboard" line under it */
+.role-dashboard .logo-title {
+  line-height: 1.2;
+}
+.role-dashboard .logo-title span:first-child {
+  /* "Librarian/Admin/Member" */
+  font-size: 1.05rem;     /* smaller than before */
+  font-weight: 700;
+}
+.role-dashboard .logo-title span:last-child {
+  /* "Dashboard" */
+  font-size: 0.9rem;      /* smaller subtitle */
+  letter-spacing: .2px;
+  color: var(--c-text-tertiary);
+}
+
+/* (Optional) on small screens, reduce a touch more */
+@media (max-width: 900px) {
+  .role-dashboard .logo-title span:first-child { font-size: 1rem; }
+  .role-dashboard .logo-title span:last-child { font-size: 0.85rem; }
+}
+
+
+
+

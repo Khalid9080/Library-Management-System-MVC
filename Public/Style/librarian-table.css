@@ -1,0 +1,193 @@
+/* --- High-contrast overrides (scoped) --- */
+.librarian-table-section,
+.librarian-table-section * {
+  color: #1b2a41; /* deep slate */
+}
+
+.librarian-table-title {
+  color: #112033 !important;
+}
+
+.responsive-table .table-header {
+  background-color: #7b8e96;   /* darker header */
+  color: #ffffff !important;
+}
+
+.responsive-table .table-row {
+  background-color: #ffffff;
+}
+
+.responsive-table .table-row .col {
+  color: #203449 !important;   /* ensure cells don’t inherit light colors */
+  font-weight: 600;            /* slightly bolder for readability */
+  font-size: 15px;             /* a bit larger */
+  line-height: 1.35;
+}
+
+/* Price column right-aligned and readable */
+.responsive-table .col-6 {
+  color: #1b2a41 !important;
+  font-variant-numeric: tabular-nums;
+  justify-content: flex-end;
+}
+
+/* Delete button label contrast */
+.row-delete-btn {
+  color: #7a1f1f !important;
+}
+
+/* Hover state to aid scanning */
+.responsive-table .table-row:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  transform: translateY(-1px);
+}
+
+/* Mobile labels (the ::before content) need contrast too */
+@media all and (max-width: 767px) {
+  .responsive-table .table-row .col::before {
+    color: #4b5e72 !important;
+    font-weight: 700;
+  }
+}
+
+
+/* Public/Style/librarian-table.css */
+/* Scoped to the librarian table block and dashboard page */
+.page-dashboard .librarian-table-section {
+  margin-top: 24px;
+}
+
+.librarian-table-container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-family: 'Be Vietnam Pro', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.librarian-table-title {
+  font-size: 26px;
+  margin: 20px 0;
+  text-align: center;
+  color: #0b1b33;
+}
+.librarian-table-title .subtitle {
+  display: block;
+  font-size: 0.6em;
+  color: #6C7A89;
+  margin-top: 6px;
+}
+
+.responsive-table {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.responsive-table li {
+  border-radius: 10px;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.responsive-table .table-header {
+  background-color: #95A5A6;
+  color: #fff;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-weight: 700;
+}
+
+.responsive-table .table-row {
+  background-color: #ffffff;
+  box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.08);
+  transition: transform .15s ease, opacity .18s ease;
+}
+.responsive-table .table-row.removing {
+  opacity: 0;
+  transform: translateY(-3px);
+}
+
+.responsive-table .col {
+  display: flex;
+  align-items: center;
+}
+
+/* Column basis (desktop) */
+.responsive-table .col-1 { flex-basis: 16%; }
+.responsive-table .col-2 { flex-basis: 22%; }
+.responsive-table .col-3 { flex-basis: 18%; }
+.responsive-table .col-4 { flex-basis: 14%; }
+.responsive-table .col-5 { flex-basis: 16%; }
+.responsive-table .col-6 { flex-basis: 10%; justify-content: flex-end; }
+.responsive-table .col-7 { flex-basis: 10%; justify-content: flex-end; }
+
+/* Delete button */
+.row-delete-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ffc9c9;
+  background: linear-gradient(180deg, #ffe8e8, #ffdcdc);
+  color: #7a1f1f;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+}
+.row-delete-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(122,31,31,.15);
+}
+.row-delete-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(122,31,31,.10);
+}
+
+/* Price right align on desktop */
+.responsive-table .col-6 {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mobile (<=767px) — turn rows into stacked cards */
+@media all and (max-width: 767px) {
+  .responsive-table .table-header {
+    display: none;
+  }
+  .responsive-table li {
+    display: block;
+    padding: 12px 14px;
+  }
+  .responsive-table .table-row .col {
+    display: flex;
+    padding: 8px 0;
+  }
+  .responsive-table .table-row .col::before {
+    color: #6C7A89;
+    padding-right: 10px;
+    content: attr(data-label);
+    flex-basis: 48%;
+    text-align: right;
+    font-weight: 600;
+  }
+
+  /* Full-width cols when stacked */
+  .responsive-table .col-1,
+  .responsive-table .col-2,
+  .responsive-table .col-3,
+  .responsive-table .col-4,
+  .responsive-table .col-5,
+  .responsive-table .col-6,
+  .responsive-table .col-7 {
+    flex-basis: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Mobile: place the button on its own line aligned left */
+  .responsive-table .col-7 {
+    margin-top: 6px;
+  }
+}

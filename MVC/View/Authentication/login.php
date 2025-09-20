@@ -24,14 +24,22 @@
         <!-- Password -->
         <div class="form-group">
           <div class="input-wrapper">
-            <input type="password" id="password" name="password" required placeholder=" " minlength="8" autocomplete="current-password" />
+            <input type="password" id="password" name="password" required placeholder=" " minlength="8"
+              autocomplete="current-password" />
             <label for="password">Password</label>
-            <button type="button" class="password-toggle" data-target="password" aria-label="Toggle password visibility">
+            <button type="button" class="password-toggle" data-target="password"
+              aria-label="Toggle password visibility">
               <span class="toggle-icon"></span>
             </button>
           </div>
           <span class="error-message" id="passwordError" aria-live="polite"></span>
         </div>
+
+        <!-- Forgot password (placed above the Sign in button) -->
+        <p class="meta-text" style="text-align:left;margin-top:-12px;">
+          <a href="<?= BASE_URL ?>index.php?page=forgot" id="toForgot">Forgot password?</a>
+        </p>
+
 
         <!-- Submit -->
         <button type="submit" class="login-btn" id="submitBtn">

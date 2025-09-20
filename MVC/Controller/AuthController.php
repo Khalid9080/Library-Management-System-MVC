@@ -146,5 +146,49 @@ if ($action === 'logout') {
   ]);
 }
 
+/** ---------- Forgot Password (Reset) ---------- */
+if ($action === 'forgot_password') {
+  $email    = trim($_POST['email'] ?? '');
+  $new      = $_POST['newPassword'] ?? '';
+  $confirm  = $_POST['confirmPassword'] ?? '';
+
+  if ($email === '' || $new === '' || $confirm === '') {
+    json_err('All fields are required', 422);
+  }
+  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    json_err('Enter a valid email address', 422);
+  }
+  if (strlen($new) < 8) {
+    json_err('Password must be at least 8 characters', 422);
+  }
+  if ($new !== $confirm) {
+    json_err("Passwords don't match", 422);
+  }
+
+  $pdo = db();
+  $stmt = $pdo->prepare('SELECT id, password_hash FROM users WHERE email = ? LIMIT 1');
+  $stmt->execute([$email]);
+  $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  if (!$user) {
+    // email not found
+    json_err('Invalid email address', 404);
+  }
+
+  // Ensure the new password is not the same as the current password
+  if (password_verify($new, $user['password_hash'])) {
+    json_err('Please choose a different password than your current one', 422);
+  }
+
+  // Update the password
+  $newHash = password_hash($new, PASSWORD_DEFAULT);
+  $up = $pdo->prepare('UPDATE users SET password_hash = ? WHERE id = ?');
+  $up->execute([$newHash, (int)$user['id']]);
+
+  json_ok([
+    'redirect' => $baseUrl . 'index.php?page=login'
+  ]);
+}
+
 /** ---------- Fallback ---------- */
 json_err('Unknown action', 404);

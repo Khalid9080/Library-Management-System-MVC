@@ -511,3 +511,27 @@ footer { padding: 2.5rem 0 3rem; color: var(--muted); }
     padding: 20px;
     background: #f8fafc; /* light page background only within main on register page */
 }
+
+
+/* ==== Dashboard route: keep global gradient for header/footer; only the app is white ==== */
+body.page-dashboard {
+  /* restore the same gradient you use site-wide */
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(90, 200, 250, 0.12), transparent 50%),
+    radial-gradient(1000px 500px at 90% -20%, rgba(168, 255, 96, 0.12), transparent 50%),
+    var(--bg) !important;
+}
+
+/* Keep dashboard content full-bleed while header/footer stay on the global gradient */
+.page-dashboard main { padding: 0 !important; background: transparent !important; }
+
+/* The dashboard canvas is already white via .role-dashboard .app in dashboard.css.
+   If you want to be extra explicit, you can reinforce it: */
+.page-dashboard .role-dashboard .app { background: #fff !important; }
+
+
+.page-dashboard main {
+  /* remove page padding/backgrounds from other views */
+  padding: 0 !important;
+  background: transparent !important;
+}
