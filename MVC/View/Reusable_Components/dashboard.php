@@ -3,17 +3,18 @@
 require_once __DIR__ . '/../../Controller/guard.php';
 ensure_auth();
 
-$user = auth_user(); // ['id','username','email','role_id','role']
+$user = auth_user();
 $role = strtolower($user['role'] ?? 'member');
 $username = $user['username'] ?? 'User';
 
-// Normalized role label for heading & logo
-$roleHeading = ucfirst($role); // Member / Librarian / Admin
+$roleHeading = ucfirst($role);
 $isLibrarian = ($role === 'librarian');
+$isMember = ($role === 'member');   // <--- ADD THIS
+$isAdmin = ($role === 'admin');
 
 // Decide if we should show a form inside the main panel
 $panel = $_GET['panel'] ?? null;               // 'add_book' or 'update_book'
-$showForm = $isLibrarian && in_array($panel, ['add_book','update_book'], true);
+$showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
 ?>
 <!-- NOTE: add a version to bust cache -->
 <link rel="stylesheet" href="<?= asset('Public/Style/librarian-table.css') ?>?v=<?= time() ?>" />
@@ -21,6 +22,7 @@ $showForm = $isLibrarian && in_array($panel, ['add_book','update_book'], true);
 <?php if ($showForm): ?>
   <link rel="stylesheet" href="<?= asset('Public/Style/librarian-forms.css') ?>?v=<?= time() ?>" />
 <?php endif; ?>
+<link rel="stylesheet" href="<?= asset('Public/Style/admin.css') ?>?v=<?= time() ?>" /> <!-- ← NEW -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
@@ -255,7 +257,6 @@ $showForm = $isLibrarian && in_array($panel, ['add_book','update_book'], true);
       <div class="app-body-navigation">
         <nav class="navigation" aria-label="Dashboard navigation">
           <?php if ($isLibrarian): ?>
-            <!-- Librarian: now three items: Dashboard, Approved Buy Requests, Buy History -->
             <a href="<?= asset('index.php?page=dashboard') ?>">
               <i class="ph-house"></i>
               <span>Dashboard</span>
@@ -268,34 +269,45 @@ $showForm = $isLibrarian && in_array($panel, ['add_book','update_book'], true);
               <i class="ph-check-square"></i>
               <span>Buy History</span>
             </a>
-          <?php else: ?>
-            <!-- Other roles: original six items -->
-            <a href="#">
-              <i class="ph-browsers"></i>
+
+          <?php elseif ($isMember): ?>
+            <a href="<?= asset('index.php?page=dashboard') ?>">
+              <i class="ph-house"></i>
               <span>Dashboard</span>
             </a>
             <a href="#">
-              <i class="ph-check-square"></i>
-              <span>Scheduled</span>
+              <i class="ph-book"></i>
+              <span>My Books</span>
             </a>
             <a href="#">
-              <i class="ph-swap"></i>
-              <span>Transfers</span>
+              <i class="ph-list-checks"></i>
+              <span>My Book Request</span>
             </a>
-            <a href="#">
-              <i class="ph-file-text"></i>
-              <span>Templates</span>
+
+          <?php elseif ($isAdmin): ?>
+            <!-- ADMIN: three buttons on LEFT, with proper icons -->
+            <a href="<?= asset('index.php?page=dashboard') ?>">
+              <i class="ph-house"></i>
+              <span>Dashboard</span>
             </a>
-            <a href="#">
-              <i class="ph-globe"></i>
-              <span>SWIFT</span>
+            <a href="<?= asset('index.php?page=dashboard&panel=manage_users') ?>">
+              <i class="ph-users-three"></i>
+              <span>Manage Users</span>
             </a>
-            <a href="#">
-              <i class="ph-clipboard-text"></i>
-              <span>Exchange</span>
+            <a href="<?= asset('index.php?page=dashboard&panel=transactions') ?>">
+              <i class="ph-receipt"></i>
+              <span>Transaction History</span>
+            </a>
+
+          <?php else: ?>
+            <a href="<?= asset('index.php?page=dashboard') ?>">
+              <i class="ph-house"></i>
+              <span>Dashboard</span>
             </a>
           <?php endif; ?>
         </nav>
+
+
 
         <!-- Logout stays, CSS pushes it to the bottom -->
         <button class="logout-button" id="logoutBtn" aria-label="Logout">Logout</button>
@@ -309,70 +321,71 @@ $showForm = $isLibrarian && in_array($panel, ['add_book','update_book'], true);
           <?php include __DIR__ . '/../Dashboard/Librarian/update_book.php'; ?>
 
         <?php else: ?>
-          <!-- Default dashboard center panel (Service + Table) -->
-          <section class="service-section">
-            <h2>Service</h2>
+          <?php if ($isMember): ?>
+            <?php include __DIR__ . '/../Dashboard/Member/member_home.php'; ?>
 
-            <div class="tiles">
-              <!-- Tile 1 -->
-              <article class="tile">
-                <div class="tile-header">
-                  <i class="ph-lightning-light"></i>
-                  <h3><a href="<?= $isLibrarian ? asset('index.php?page=dashboard&panel=add_book') : '#' ?>">
-                    <span>Adding New Books</span>
-                  </a></h3>
-                </div>
-                <a href="<?= $isLibrarian ? asset('index.php?page=dashboard&panel=add_book') : '#' ?>">
-                  <span>Go to service</span>
-                  <span class="icon-button">
-                    <i class="ph-caret-right-bold"></i>
-                  </span>
-                </a>
-              </article>
+          <?php elseif ($isLibrarian): ?>
+            <!-- Librarian view remains as you had -->
+            <section class="service-section">
+              <h2>Service</h2>
+              <div class="tiles">
+                <article class="tile">
+                  <div class="tile-header">
+                    <i class="ph-lightning-light"></i>
+                    <h3><a href="<?= $isLibrarian ? asset('index.php?page=dashboard&panel=add_book') : '#' ?>">
+                        <span>Adding New Books</span>
+                      </a></h3>
+                  </div>
+                  <a href="<?= $isLibrarian ? asset('index.php?page=dashboard&panel=add_book') : '#' ?>">
+                    <span>Go to service</span>
+                    <span class="icon-button"><i class="ph-caret-right-bold"></i></span>
+                  </a>
+                </article>
 
-              <!-- Tile 2 -->
-              <article class="tile">
-                <div class="tile-header">
-                  <i class="ph-fire-simple-light"></i>
-                  <h3>
-                    <span>Update Books Info</span>
-                  </h3>
-                </div>
-                <a href="<?= $isLibrarian ? asset('index.php?page=dashboard&panel=update_book') : '#' ?>">
-                  <span>Go to service</span>
-                  <span class="icon-button">
-                    <i class="ph-caret-right-bold"></i>
-                  </span>
-                </a>
-              </article>
+                <article class="tile">
+                  <div class="tile-header">
+                    <i class="ph-fire-simple-light"></i>
+                    <h3><a href="<?= $isLibrarian ? asset('index.php?page=dashboard&panel=update_book') : '#' ?>">
+                        <span>Update Books Info</span>
+                      </a></h3>
+                  </div>
+                  <a href="<?= $isLibrarian ? asset('index.php?page=dashboard&panel=update_book') : '#' ?>">
+                    <span>Go to service</span>
+                    <span class="icon-button"><i class="ph-caret-right-bold"></i></span>
+                  </a>
+                </article>
 
-              <!-- Tile 3 -->
-              <article class="tile tile-remove-books">
-                <div class="tile-header">
-                  <i class="ph-file-light"></i>
-                  <h3>
-                    <span>Remove Books From the Library</span>
-                  </h3>
-                </div>
-                <a href="#">
-                  <span>Go to service</span>
-                  <span class="icon-button">
-                    <i class="ph-caret-right-bold"></i>
-                  </span>
-                </a>
-              </article>
-            </div>
-          </section>
+                <article class="tile tile-remove-books">
+                  <div class="tile-header">
+                    <i class="ph-file-light"></i>
+                    <h3><span>Total Books:</span></h3>
+                  </div>
+                </article>
+              </div>
+            </section>
 
-          <?php if ($isLibrarian): ?>
             <?php
-              // Include and render the reusable table component
-              require_once __DIR__ . '/../Dashboard/Librarian/LibrarianTable.php';
-              // Optional: pass custom data later: render_librarian_table($rowsFromDb);
-              render_librarian_table(); // demo data for now
+            require_once __DIR__ . '/../Dashboard/Librarian/LibrarianTable.php';
+            render_librarian_table();
             ?>
+
+          <?php elseif ($isAdmin): ?>
+            <!-- ADMIN: KPI cards + users table -->
+            <?php include __DIR__ . '/../Dashboard/Admin/admin_home.php'; ?>
+            <?php
+            require_once __DIR__ . '/../Dashboard/Admin/AdminTable.php';
+            render_admin_user_table();
+            ?>
+            <script src="<?= asset('Public/JS/admin.js') ?>?v=<?= time() ?>"></script>
+
+          <?php else: ?>
+            <div class="admin-placeholder">
+              <p>Welcome to the Admin Dashboard.</p>
+            </div>
           <?php endif; ?>
         <?php endif; ?>
+
+
       </div>
     </div>
 </section>

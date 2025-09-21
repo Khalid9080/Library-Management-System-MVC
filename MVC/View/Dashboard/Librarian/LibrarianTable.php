@@ -1,5 +1,5 @@
 <?php
-// MVC/View/Dashboard/LibrarianTable.php
+// MVC/View/Dashboard/Librarian/LibrarianTable.php
 // Reusable component: render a librarian-only responsive table
 // Usage:
 //   include __DIR__ . '/LibrarianTable.php';
@@ -15,7 +15,7 @@ if (!function_exists('render_librarian_table')) {
           'book'      => 'The C Programming Language',
           'author'    => 'Kernighan & Ritchie',
           'category'  => 'Programming',
-          'customer'  => 'Alice Johnson',
+          'year'      => '1988-04-01',   // dummy publication date
           'price'     => 49.99,
         ],
         [
@@ -23,7 +23,7 @@ if (!function_exists('render_librarian_table')) {
           'book'      => 'Introduction to Algorithms',
           'author'    => 'Cormen et al.',
           'category'  => 'Algorithms',
-          'customer'  => 'Bob Williams',
+          'year'      => '2009-07-31',
           'price'     => 89.50,
         ],
         [
@@ -31,7 +31,7 @@ if (!function_exists('render_librarian_table')) {
           'book'      => 'Head First Design Patterns',
           'author'    => 'Eric Freeman',
           'category'  => 'Software Engineering',
-          'customer'  => 'Clara Mendes',
+          'year'      => '2004-10-25',
           'price'     => 54.00,
         ],
         [
@@ -39,7 +39,7 @@ if (!function_exists('render_librarian_table')) {
           'book'      => 'Structure and Interpretation of Computer Programs',
           'author'    => 'Abelson & Sussman',
           'category'  => 'CS Theory',
-          'customer'  => 'David Kim',
+          'year'      => '1996-07-25',
           'price'     => 72.25,
         ],
       ];
@@ -67,7 +67,7 @@ if (!function_exists('render_librarian_table')) {
             <div class="col col-2" role="columnheader">Book Name</div>
             <div class="col col-3" role="columnheader">Author Name</div>
             <div class="col col-4" role="columnheader">Category</div>
-            <div class="col col-5" role="columnheader">Customer Name</div>
+            <div class="col col-5" role="columnheader">Year of Publication</div>
             <div class="col col-6" role="columnheader">Book Price</div>
             <div class="col col-7" role="columnheader">Action</div>
           </li>
@@ -86,8 +86,8 @@ if (!function_exists('render_librarian_table')) {
               <div class="col col-4" role="cell" data-label="Category">
                 <?= htmlspecialchars($r['category'], ENT_QUOTES, 'UTF-8') ?>
               </div>
-              <div class="col col-5" role="cell" data-label="Customer Name">
-                <?= htmlspecialchars($r['customer'], ENT_QUOTES, 'UTF-8') ?>
+              <div class="col col-5" role="cell" data-label="Year of Publication">
+                <?= htmlspecialchars($r['year'], ENT_QUOTES, 'UTF-8') ?>
               </div>
               <div class="col col-6" role="cell" data-label="Book Price">
                 $<?= number_format((float)$r['price'], 2) ?>

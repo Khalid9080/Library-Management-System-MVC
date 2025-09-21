@@ -117,7 +117,7 @@
 /* Styled, smaller logout button */
 .role-dashboard .logout-button {
   margin-top: auto;
-  padding: .45rem 1rem;
+  padding: 0.75rem 1.25rem;          /* bigger padding */
   border: 1px solid rgba(31,31,31,.15);
   background: linear-gradient(180deg,#ffffff,#eef6ff);
   color: var(--c-text-primary);
@@ -125,8 +125,9 @@
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,.06);
   transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
-  width: auto;
+  width: 100%;                       /* full sidebar width */
   font-weight: 600;
+  font-size: 13px;                   /* larger text */
 }
 .role-dashboard .logout-button:hover {
   transform: translateY(-1px);
@@ -333,5 +334,20 @@
 }
 
 
+.page-dashboard .role-dashboard.role-member .navigation {
+  align-items: flex-start !important;     /* anchor nav items to the left */
+  width: 100%;
+  padding-left: 0 !important;
+}
 
+.page-dashboard .role-dashboard.role-member .navigation a {
+  justify-content: flex-start !important; /* icon + text flush left */
+  text-align: left !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  width: 100%;
+}
 
+.page-dashboard .role-dashboard.role-member .logout-button {
+  align-self: center !important;          /* center the Logout button horizontally */
+}

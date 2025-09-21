@@ -1,0 +1,310 @@
+/* Scoped to member dashboard */
+.member-dashboard {
+    margin-top: 24px;
+    /* drop the block a bit lower on the page */
+    font-family: 'Be Vietnam Pro', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* --- Titles / subtitles --- */
+.member-intro {
+    max-width: 1100px;
+    margin: 0 auto 28px;
+    /* center block + space under */
+    text-align: center;
+    /* CENTERED */
+    padding: 0 8px;
+}
+
+.member-title {
+    margin: 0 0 8px;
+    font-size: 1.6rem;
+    /* bigger */
+    font-weight: 900;
+    color: #0b1b33;
+}
+
+.member-subtitle {
+    margin: 0;
+    color: #33536b;
+    font-weight: 600;
+    font-size: 1.05rem;
+    /* bigger subtitle */
+}
+
+/* --- Search Bar (adapted & scoped) --- */
+.member-search-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 18px 0 40px;
+    /* MORE space below search bar */
+}
+
+.member-dashboard .search-wrapper {
+    position: relative;
+    transform: none;
+    top: auto;
+    left: auto;
+}
+
+.member-dashboard .search-wrapper .input-holder {
+    height: 56px;
+    width: 56px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 8px;
+    position: relative;
+    transition: all .3s ease-in-out;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .05);
+}
+
+.member-dashboard .search-wrapper.active .input-holder {
+    width: min(980px, 100vw - 48px);
+    border-radius: 999px;
+    background: #505963;
+    transition: all .5s cubic-bezier(0.000, 0.105, 0.035, 1.570);
+}
+
+.member-dashboard .search-wrapper .input-holder .search-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 68px 0 18px;
+    opacity: 0;
+    position: absolute;
+    inset: 4px 4px auto 4px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #0b1b33;
+    transform: translate(0, 60px);
+    transition: all .3s cubic-bezier(0.000, 0.105, 0.035, 1.570);
+    transition-delay: .3s;
+}
+
+.member-dashboard .search-wrapper.active .input-holder .search-input {
+    opacity: 1;
+    transform: translate(0, 0);
+    color: #fff;                          /* WHITE text */
+   
+}
+
+/* Make placeholder text white */
+#bookSearchInput::placeholder {
+  color: #fff;
+  opacity: 1; /* ensure it's fully visible */
+}
+
+.member-dashboard .search-wrapper .input-holder .search-icon {
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 8px;
+    background: #FFF;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    float: right;
+    transition: all .3s ease-in-out;
+}
+
+.member-dashboard .search-wrapper.active .input-holder .search-icon {
+    width: 44px;
+    height: 44px;
+    margin: 6px;
+    border-radius: 999px;
+}
+
+.member-dashboard .search-wrapper .input-holder .search-icon span {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    position: relative;
+    transform: rotate(45deg);
+    transition: all .4s cubic-bezier(0.650, -0.600, 0.240, 1.650);
+}
+
+.member-dashboard .search-wrapper.active .input-holder .search-icon span {
+    transform: rotate(-45deg);
+}
+
+.member-dashboard .search-wrapper .input-holder .search-icon span::before,
+.member-dashboard .search-wrapper .input-holder .search-icon span::after {
+    position: absolute;
+    content: '';
+}
+
+.member-dashboard .search-wrapper .input-holder .search-icon span::before {
+    width: 4px;
+    height: 11px;
+    left: 8px;
+    top: 16px;
+    border-radius: 2px;
+    background: #FE5F55;
+}
+
+.member-dashboard .search-wrapper .input-holder .search-icon span::after {
+    width: 14px;
+    height: 14px;
+    left: 0;
+    top: 0;
+    border-radius: 16px;
+    border: 4px solid #FE5F55;
+}
+
+.member-dashboard .search-wrapper .close {
+    position: absolute;
+    z-index: 1;
+    top: 16px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transform: rotate(-180deg);
+    transition: all .3s cubic-bezier(0.285, -0.450, 0.935, 0.110);
+    transition-delay: .2s;
+    background: transparent;
+    border: 0;
+}
+
+.member-dashboard .search-wrapper.active .close {
+    right: -40px;
+    transform: rotate(45deg);
+    transition: all .6s cubic-bezier(0.000, 0.105, 0.035, 1.570);
+    transition-delay: .5s;
+}
+
+.member-dashboard .search-wrapper .close::before,
+.member-dashboard .search-wrapper .close::after {
+    position: absolute;
+    content: '';
+    background: #FE5F55;
+    border-radius: 2px;
+}
+
+.member-dashboard .search-wrapper .close::before {
+    width: 5px;
+    height: 24px;
+    left: 9px;
+    top: 0;
+}
+
+.member-dashboard .search-wrapper .close::after {
+    width: 24px;
+    height: 5px;
+    left: 0;
+    top: 9px;
+}
+
+/* --- Catalog heading (centered) --- */
+.member-table-head {
+    max-width: 1100px;
+    margin: 64px auto 12px;
+    /* BIG gap from search to catalog */
+    text-align: center;
+    /* CENTERED */
+    padding: 0 8px;
+}
+
+.table-title {
+    margin: 0 0 6px;
+    font-size: 1.25rem;
+    /* bigger */
+    font-weight: 900;
+    color: #0b1b33;
+}
+
+.table-subtitle {
+    margin: 0;
+    color: #6a8298;
+    font-weight: 600;
+    font-size: 1.05rem;
+    /* bigger */
+}
+
+/* --- Table --- */
+.member-table-wrap {
+    margin-top: 16px;
+}
+
+.table-scroll {
+    border: 1px solid #e9eef5;
+    border-radius: 12px;
+    overflow-x: auto;
+    background: #fff;
+    box-shadow: 0 8px 22px rgba(13, 35, 69, .06);
+}
+
+.member-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 880px;
+}
+
+.member-table thead th {
+    text-align: left;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: .02em;
+    background: #7b8e96;
+    color: #fff;
+    padding: 14px 12px;
+    position: sticky;
+    top: 0;
+}
+
+.member-table tbody td {
+    padding: 12px;
+    border-top: 1px solid #edf1f6;
+    color: #203449;
+    font-weight: 600;
+}
+
+.member-table .col-check {
+    width: 48px;
+    text-align: center;
+}
+
+.member-table input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
+
+.member-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+/* Full-width button below table */
+.table-action {
+    margin-top: 14px;
+}
+
+.buy-request-btn {
+    width: 100%;
+    padding: 14px 16px;
+    font-weight: 800;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ffc9c9;
+    background: linear-gradient(180deg, #ffe8e8, #ffdcdc);
+    color: #7a1f1f;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.buy-request-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(122, 31, 31, .15);
+}
+
+.buy-request-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(122, 31, 31, .10);
+}
+
+/* Small screens */
+@media (max-width:900px) {
+    .member-dashboard .search-wrapper.active .input-holder {
+        width: calc(100vw - 48px);
+    }
+}

@@ -49,9 +49,9 @@
       </div>
 
       <div class="input-group">
-        <label for="customer">Customer Name</label>
-        <input type="text" id="customer" name="customer" placeholder="e.g. John Doe" required />
-        <span class="error-message" id="customerError"></span>
+        <label for="pub_year">Year of Publication</label>
+        <input type="date" id="pub_year" name="publication_year" max="<?= date('Y-m-d') ?>" required />
+        <span class="error-message" id="pub_yearError"></span>
       </div>
 
       <div class="input-group">

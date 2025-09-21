@@ -1,3 +1,4 @@
+// Public/JS/update_book.js
 // Identical simple "required" validation for update page
 (function () {
   var form = document.getElementById('updateBookForm');
@@ -8,7 +9,7 @@
     title: document.getElementById('title'),
     author: document.getElementById('author'),
     category: document.getElementById('category'),
-    customer: document.getElementById('customer'),
+    pub_year: document.getElementById('pub_year'),
     price: document.getElementById('price'),
   };
 
@@ -17,7 +18,7 @@
     title: document.getElementById('titleError'),
     author: document.getElementById('authorError'),
     category: document.getElementById('categoryError'),
-    customer: document.getElementById('customerError'),
+    pub_year: document.getElementById('pub_yearError'),
     price: document.getElementById('priceError'),
   };
 
