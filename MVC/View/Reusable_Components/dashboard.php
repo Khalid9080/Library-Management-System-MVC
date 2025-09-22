@@ -13,7 +13,7 @@ $isMember = ($role === 'member');   // <--- ADD THIS
 $isAdmin = ($role === 'admin');
 
 // Decide if we should show a form inside the main panel
-$panel = $_GET['panel'] ?? null;               // 'add_book' or 'update_book'
+$panel = $_GET['panel'] ?? null;               // 'add_book' or 'update_book' or 'manage_users'
 $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
 ?>
 <!-- NOTE: add a version to bust cache -->
@@ -261,11 +261,11 @@ $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
               <i class="ph-house"></i>
               <span>Dashboard</span>
             </a>
-            <a href="#">
+            <a href="<?= asset('index.php?page=dashboard&panel=approved_buy_requests') ?>">
               <i class="ph-browsers"></i>
               <span>Approved Buy Requests</span>
             </a>
-            <a href="#">
+            <a href="<?= asset('index.php?page=dashboard&panel=buy_history') ?>">
               <i class="ph-check-square"></i>
               <span>Buy History</span>
             </a>
@@ -275,11 +275,11 @@ $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
               <i class="ph-house"></i>
               <span>Dashboard</span>
             </a>
-            <a href="#">
+            <a href="<?= asset('index.php?page=dashboard&panel=my_books') ?>">
               <i class="ph-book"></i>
               <span>My Books</span>
             </a>
-            <a href="#">
+            <a href="<?= asset('index.php?page=dashboard&panel=my_book_requests') ?>">
               <i class="ph-list-checks"></i>
               <span>My Book Request</span>
             </a>
@@ -307,8 +307,6 @@ $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
           <?php endif; ?>
         </nav>
 
-
-
         <!-- Logout stays, CSS pushes it to the bottom -->
         <button class="logout-button" id="logoutBtn" aria-label="Logout">Logout</button>
       </div>
@@ -320,9 +318,22 @@ $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
         <?php elseif ($showForm && $panel === 'update_book'): ?>
           <?php include __DIR__ . '/../Dashboard/Librarian/update_book.php'; ?>
 
+        <?php elseif ($isLibrarian && $panel === 'approved_buy_requests'): ?>
+          <?php include __DIR__ . '/../Dashboard/Librarian/approved_buy_requests.php'; ?>
+
+        <?php elseif ($isLibrarian && $panel === 'buy_history'): ?>
+          <?php include __DIR__ . '/../Dashboard/Librarian/buy_history.php'; ?>
+
+        <?php elseif ($isMember && $panel === 'my_books'): ?>
+          <?php include __DIR__ . '/../Dashboard/Member/my_books.php'; ?>
+
+        <?php elseif ($isMember && $panel === 'my_book_requests'): ?>
+          <?php include __DIR__ . '/../Dashboard/Member/my_book_requests.php'; ?>
+
         <?php else: ?>
           <?php if ($isMember): ?>
             <?php include __DIR__ . '/../Dashboard/Member/member_home.php'; ?>
+
 
           <?php elseif ($isLibrarian): ?>
             <!-- Librarian view remains as you had -->
@@ -370,13 +381,21 @@ $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
             ?>
 
           <?php elseif ($isAdmin): ?>
-            <!-- ADMIN: KPI cards + users table -->
-            <?php include __DIR__ . '/../Dashboard/Admin/admin_home.php'; ?>
-            <?php
-            require_once __DIR__ . '/../Dashboard/Admin/AdminTable.php';
-            render_admin_user_table();
-            ?>
-            <script src="<?= asset('Public/JS/admin.js') ?>?v=<?= time() ?>"></script>
+            <?php if (($panel ?? '') === 'manage_users'): ?>
+              <?php include __DIR__ . '/../Dashboard/Admin/manage_users.php'; ?>
+
+            <?php elseif (($panel ?? '') === 'transactions'): ?>
+              <?php include __DIR__ . '/../Dashboard/Admin/transaction_history.php'; ?>
+
+            <?php else: ?>
+              <!-- ADMIN: KPI cards + users table -->
+              <?php include __DIR__ . '/../Dashboard/Admin/admin_home.php'; ?>
+              <?php
+              require_once __DIR__ . '/../Dashboard/Admin/AdminTable.php';
+              render_admin_user_table();
+              ?>
+              <script src="<?= asset('Public/JS/admin.js') ?>?v=<?= time() ?>"></script>
+            <?php endif; ?>
 
           <?php else: ?>
             <div class="admin-placeholder">
@@ -384,8 +403,6 @@ $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
             </div>
           <?php endif; ?>
         <?php endif; ?>
-
-
       </div>
     </div>
 </section>

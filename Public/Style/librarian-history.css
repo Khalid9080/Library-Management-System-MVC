@@ -1,0 +1,18 @@
+/* Plain page — no sticky, no blur, no background blocks */
+.librarian-history {
+  background: transparent !important;
+  padding: 0;
+  margin: 0;
+}
+
+.librarian-history .page-title {
+  position: static !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  margin: 0 0 1rem 0;
+  padding: 0;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  color: #0b1b33;
+}
