@@ -10,7 +10,7 @@ $js  = function_exists('asset') ? asset('Public/JS/member.js') . '?v=' . time() 
   <div class="member-intro">
     <h3 class="member-title">Find Your Next Read</h3>
     <p class="member-subtitle">
-      Search your favorite books below. All the books’ information is here — ready to send a request to buy new books.
+      Search your favorite books below. All the books’ information is live from the database — ready to send a request to buy new books.
     </p>
   </div>
 
@@ -34,11 +34,10 @@ $js  = function_exists('asset') ? asset('Public/JS/member.js') . '?v=' . time() 
   <!-- Results Table -->
   <div class="member-table-wrap">
     <div class="table-scroll">
-      <table class="member-table" id="memberBooksTable">
+      <table class="member-table" id="memberBooksTable" aria-live="polite">
         <thead>
           <tr>
             <th class="col-check">
-              <!-- no visible text; keep ARIA label only -->
               <input type="checkbox" id="selectAll" aria-label="Select all rows" />
             </th>
             <th>ISBN Number</th>
@@ -49,26 +48,8 @@ $js  = function_exists('asset') ? asset('Public/JS/member.js') . '?v=' . time() 
             <th>Book Price</th>
           </tr>
         </thead>
-        <tbody>
-          <?php
-          $rows = [
-            ['978-0131103627','The C Programming Language','Kernighan & Ritchie','Programming','1988-04-01',49.99],
-            ['978-0262033848','Introduction to Algorithms','Cormen et al.','Algorithms','2009-07-31',89.50],
-            ['978-0596009205','Head First Design Patterns','Eric Freeman','Software Engineering','2004-10-25',54.00],
-            ['978-0131101630','SICP','Abelson & Sussman','CS Theory','1996-07-25',72.25],
-            ['978-0201633610','Design Patterns','Gamma et al.','Software Engineering','1994-10-31',64.95],
-          ];
-          foreach ($rows as $r): ?>
-            <tr>
-              <td class="col-check"><input type="checkbox" class="row-check" aria-label="Select row" /></td>
-              <td><?= htmlspecialchars($r[0]) ?></td>
-              <td><?= htmlspecialchars($r[1]) ?></td>
-              <td><?= htmlspecialchars($r[2]) ?></td>
-              <td><?= htmlspecialchars($r[3]) ?></td>
-              <td><?= htmlspecialchars($r[4]) ?></td>
-              <td>$<?= number_format($r[5], 2) ?></td>
-            </tr>
-          <?php endforeach; ?>
+        <tbody id="memberBooksTbody">
+          <!-- rows injected by JS -->
         </tbody>
       </table>
     </div>
@@ -76,6 +57,11 @@ $js  = function_exists('asset') ? asset('Public/JS/member.js') . '?v=' . time() 
     <!-- Full-width action button -->
     <div class="table-action">
       <button type="button" class="buy-request-btn" id="buyRequestBtn">Order a Buy Request</button>
+    </div>
+
+    <!-- empty state -->
+    <div id="memberEmpty" style="display:none; padding:12px 8px; color:#666;">
+      No books yet. Ask the librarian to add some!
     </div>
   </div>
 </section>

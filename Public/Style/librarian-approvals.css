@@ -1,19 +1,100 @@
-/* Plain page — no sticky, no blur, no background blocks */
-.librarian-approvals {
-  background: transparent !important;
-  padding: 0;
-  margin: 0;
-}
-
+/* Librarian approvals — same layout, plus action buttons */
 .librarian-approvals .page-title {
-  position: static !important;
-  background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  margin: 0 0 1rem 0;
-  padding: 0;
   font-size: clamp(22px, 3vw, 28px);
   font-weight: 800;
   color: #0b1b33;
+  margin: 0 0 1rem 0;
 }
 
+.card-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(780px, 1fr);
+}
+
+.request-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  gap: 16px;
+  padding: 16px 18px;
+  border: 1px solid #e6e8ee;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+.request-card .card-left {
+  display: grid;
+  gap: 8px;
+}
+
+.request-card .title {
+  font-weight: 800;
+  color: #0b1b33;
+  font-size: 16px;
+}
+
+.request-card .meta {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  color: #3a3f47;
+}
+
+.request-card .meta span {
+  color: #5a6270;
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.request-card .card-right {
+  display: grid;
+  align-content: space-between;
+  justify-items: end;
+  min-width: 220px;
+}
+
+.request-card .price {
+  font-weight: 800;
+  font-size: 20px;
+  color: #0b1b33;
+}
+
+.request-card .actions {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 8px;
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #d6dae2;
+  background: #f7f9fc;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform .1s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+}
+
+.btn-approve {
+  background: #e9f8ef;
+  border-color: #cfeedd;
+  color: #23643a;
+}
+
+.btn-reject {
+  background: #ffecec;
+  border-color: #ffd8d8;
+  color: #7a1f1f;
+}
+
+.empty-hint {
+  margin-top: 10px;
+  color: #666;
+}

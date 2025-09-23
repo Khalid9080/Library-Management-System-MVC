@@ -369,9 +369,13 @@ $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
                 <article class="tile tile-remove-books">
                   <div class="tile-header">
                     <i class="ph-file-light"></i>
-                    <h3><span>Total Books:</span></h3>
+                    <h3>
+                      <span>Total Books:</span>
+                      <strong id="totalBooksCount" style="margin-left:.4rem;">…</strong>
+                    </h3>
                   </div>
                 </article>
+
               </div>
             </section>
 
@@ -434,4 +438,29 @@ $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
       })
       .catch(() => { window.location = root + 'index.php?page=login'; });
   });
+</script>
+<script>
+  // Fetch and render total books created by the current librarian
+  (function () {
+    const el = document.getElementById('totalBooksCount');
+    if (!el) return;
+
+    function loadTotal() {
+      fetch('MVC/Controller/BooksController.php?action=count_books')
+        .then(r => r.json())
+        .then(j => {
+          if (j && j.ok) {
+            el.textContent = j.count;
+          } else {
+            el.textContent = '—';
+          }
+        })
+        .catch(() => { el.textContent = '—'; });
+    }
+
+    // Expose for other scripts (e.g., after add_book)
+    window.TOTAL_BOOKS = { refresh: loadTotal };
+
+    loadTotal();
+  })();
 </script>
