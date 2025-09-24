@@ -440,7 +440,6 @@ $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
   });
 </script>
 <script>
-  // Fetch and render total books created by the current librarian
   (function () {
     const el = document.getElementById('totalBooksCount');
     if (!el) return;
@@ -450,7 +449,10 @@ $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
         .then(r => r.json())
         .then(j => {
           if (j && j.ok) {
-            el.textContent = j.count;
+            // Show global total for all librarians
+            el.textContent = (typeof j.count_all === 'number')
+              ? j.count_all
+              : (j.count ?? '—'); // fallback for older responses
           } else {
             el.textContent = '—';
           }
@@ -458,9 +460,7 @@ $showForm = $isLibrarian && in_array($panel, ['add_book', 'update_book'], true);
         .catch(() => { el.textContent = '—'; });
     }
 
-    // Expose for other scripts (e.g., after add_book)
     window.TOTAL_BOOKS = { refresh: loadTotal };
-
     loadTotal();
   })();
 </script>

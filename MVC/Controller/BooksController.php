@@ -158,18 +158,24 @@ if ($action === 'update_book') {
   }
 }
 
-/* ---------- Count Books added by the current librarian ---------- */
+/* ---------- Count Books (global + by the current librarian) ---------- */
 if ($action === 'count_books') {
   require_librarian();
   $user = auth_user();
   $uid  = (int)$user['id'];
 
-  $st = $pdo->prepare("SELECT COUNT(*) FROM books WHERE created_by = ?");
-  $st->execute([$uid]);
-  $count = (int)$st->fetchColumn();
+  // global count
+  $stAll = $pdo->query("SELECT COUNT(*) FROM books");
+  $countAll = (int)$stAll->fetchColumn();
 
-  ok(['count' => $count], 200);
+  // my count
+  $stMine = $pdo->prepare("SELECT COUNT(*) FROM books WHERE created_by = ?");
+  $stMine->execute([$uid]);
+  $countMine = (int)$stMine->fetchColumn();
+
+  ok(['count_all' => $countAll, 'count_mine' => $countMine], 200);
 }
+
 
 
 err('Unknown action', 404);

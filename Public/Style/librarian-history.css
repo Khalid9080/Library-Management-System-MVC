@@ -1,9 +1,8 @@
 /* ===================== HARD VISIBILITY RESET ===================== */
-/* Make sure nothing inside the Buy History section is washed out */
 .librarian-history,
 .librarian-history * {
-  color: #0b1b33 !important;     /* strong readable text */
-  opacity: 1 !important;         /* cancel any inherited low opacity */
+  color: #0b1b33 !important;
+  opacity: 1 !important;
   filter: none !important;
 }
 
@@ -28,7 +27,7 @@
 /* ===================== TABLE ===================== */
 .history-table-wrap {
   background: #fff;
-  border: 1px solid #cfd6e4;        /* darker than before */
+  border: 1px solid #cfd6e4;
   border-radius: 12px;
   padding: 12px;
 }
@@ -36,21 +35,21 @@
 .history-table {
   width: 100%;
   border-collapse: collapse;
-  color: #203449 !important;        /* table body text */
+  color: #203449 !important;
 }
 
 .history-table thead th {
   text-align: left;
   font-weight: 800;
   padding: .66rem .6rem;
-  border-bottom: 2px solid #cfd6e4;  /* visible divider */
-  color: #102a43 !important;         /* darker header */
-  background: #f4f7fb;               /* subtle header bg for contrast */
+  border-bottom: 2px solid #cfd6e4;
+  color: #102a43 !important;
+  background: #f4f7fb;
 }
 
 .history-table tbody td {
   padding: .6rem .6rem;
-  border-bottom: 1px solid #e3e8f2;  /* clearer row line */
+  border-bottom: 1px solid #e3e8f2;
   color: #203449 !important;
 }
 
@@ -60,19 +59,36 @@
 
 /* ===================== TOTALS ===================== */
 .history-totals {
-  padding: .7rem .25rem;
+  padding: .9rem .25rem 1.1rem;
 }
 
 .history-totals hr {
   border: 0;
-  border-top: 1px solid #cfd6e4;     /* stronger hr */
-  margin: .7rem 0;
+  border-top: 1px solid #cfd6e4;
+  margin: .85rem 0 1rem;
 }
 
+/* 4 columns on desktop, graceful wrap on smaller screens */
 .totals-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: .5rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px 18px; /* decent gap between each item (row x column) */
   font-weight: 700;
   color: #102a43 !important;
+}
+
+.totals-item {
+  background: #f7faff;            /* subtle chip */
+  border: 1px solid #e2ebf8;
+  border-radius: 10px;
+  padding: .65rem .75rem;
+  line-height: 1.35;
+}
+
+/* Responsive: reduce to 2 columns on tablets and 1 on phones */
+@media (max-width: 900px) {
+  .totals-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .totals-grid { grid-template-columns: 1fr; }
 }

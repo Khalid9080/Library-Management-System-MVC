@@ -33,10 +33,17 @@
     });
     tbody.appendChild(frag);
 
+    // Support both new keys and fallback if API still sends older names
+    const totalMembers  = Number(t.total_members ?? 0);
+    const distinctAuth  = Number(t.distinct_authors ?? 0);
+    const totalBooks    = Number(t.total_books ?? t.total_quantity ?? 0);
+    const totalAmount   = Number(t.total_amount ?? 0);
+
     totals.innerHTML = `
-      <div><strong>Total distinct authors:</strong> ${t.distinct_authors}</div>
-      <div><strong>Total quantity:</strong> ${t.total_quantity}</div>
-      <div><strong>Total amount:</strong> $${money(t.total_amount)}</div>
+      <div class="totals-item"><strong>Total Members:</strong> ${totalMembers}</div>
+      <div class="totals-item"><strong>Total Distinct Authors:</strong> ${distinctAuth}</div>
+      <div class="totals-item"><strong>Total Books:</strong> ${totalBooks}</div>
+      <div class="totals-item"><strong>Total Amount:</strong> $${money(totalAmount)}</div>
     `;
   }
 
@@ -45,7 +52,7 @@
       .then(r=>r.json())
       .then(j=>{
         if (!j || !j.ok){ console.error(j); return; }
-        render(j.rows || [], j.totals || {distinct_authors:0,total_quantity:0,total_amount:0});
+        render(j.rows || [], j.totals || {total_members:0,distinct_authors:0,total_books:0,total_amount:0});
       })
       .catch(()=>{ /* silent */ });
   }
