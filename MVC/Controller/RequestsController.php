@@ -15,12 +15,17 @@ $pdo = db();
 $action = $_POST['action'] ?? $_GET['action'] ?? null;
 if (!$action) err('No action');
 
-/* ---------- Guards ---------- */
 function require_librarian(): void {
   if (!is_logged_in() || user_role() !== 'librarian') err('Forbidden', 403);
 }
 function require_member(): void {
   if (!is_logged_in() || user_role() !== 'member') err('Forbidden', 403);
+}
+/** NEW: allow librarian OR admin (read-only endpoints) */
+function require_staff(): void {
+  if (!is_logged_in()) err('Forbidden', 403);
+  $role = user_role();
+  if ($role !== 'librarian' && $role !== 'admin') err('Forbidden', 403);
 }
 
 /* ===========================================================
@@ -85,13 +90,11 @@ if ($action === 'reject_request') {
 }
 
 /* ===========================================================
-   BUY HISTORY (for the librarian history table)
+   BUY HISTORY (used by Librarian AND Admin Transaction History)
    =========================================================== */
 if ($action === 'list_buy_history') {
-  // UPDATED GUARD: allow both librarian AND admin
-  if (!is_logged_in()) err('Forbidden', 403);
-  $role = user_role();
-  if ($role !== 'librarian' && $role !== 'admin') err('Forbidden', 403);
+  // allow librarians OR admins to view this dataset
+  require_staff();
 
   $rowsSql = "
     SELECT
@@ -111,12 +114,15 @@ if ($action === 'list_buy_history') {
   ";
   $rows = $pdo->query($rowsSql)->fetchAll(PDO::FETCH_ASSOC);
 
+  // >>> CHANGED: Total amount should ONLY include APPROVED lines
   $totalsSql = "
     SELECT
-      COUNT(DISTINCT br.member_id)                 AS total_members,
-      COUNT(DISTINCT b.author)                     AS distinct_authors,
-      COALESCE(SUM(bri.quantity), 0)               AS total_books,
-      COALESCE(SUM(bri.quantity * bri.unit_price), 0) AS total_amount
+      COUNT(DISTINCT br.member_id)                                  AS total_members,
+      COUNT(DISTINCT b.author)                                      AS distinct_authors,
+      COALESCE(SUM(bri.quantity), 0)                                AS total_books,
+      COALESCE(SUM(CASE WHEN br.status = 'approved'
+                        THEN bri.quantity * bri.unit_price
+                        ELSE 0 END), 0)                             AS total_amount
     FROM book_request_items bri
     JOIN book_requests br ON br.id = bri.request_id
     JOIN books b          ON b.id  = bri.book_id
@@ -184,7 +190,7 @@ if ($action === 'member_locked_book_ids') {
 }
 
 /* ===========================================================
-   MEMBER CREATE REQUEST (used by Catalog → Order a Buy Request)
+   MEMBER CREATE REQUEST
    =========================================================== */
 if ($action === 'create_request') {
   require_member();
@@ -208,7 +214,6 @@ if ($action === 'create_request') {
   try {
     $pdo->beginTransaction();
 
-    // Ensure none of these books are already pending/approved by this member
     $in = implode(',', array_fill(0, count($bookIds), '?'));
     $params = array_merge([$mid], $bookIds);
     $checkSql = "
@@ -226,7 +231,6 @@ if ($action === 'create_request') {
       err('Some books are already requested/approved: ' . implode(',', $already), 409);
     }
 
-    // Fetch unit prices
     $priceSql = "SELECT id, price FROM books WHERE id IN ($in)";
     $pstmt = $pdo->prepare($priceSql);
     $pstmt->execute($bookIds);
@@ -241,7 +245,6 @@ if ($action === 'create_request') {
       }
     }
 
-    // Create header + lines
     $hdr = $pdo->prepare("INSERT INTO book_requests (member_id, status) VALUES (?, 'pending')");
     $hdr->execute([$mid]);
     $rid = (int)$pdo->lastInsertId();
@@ -263,7 +266,7 @@ if ($action === 'create_request') {
 }
 
 /* ===========================================================
-   MEMBER LIST OF REQUESTS (for My Book Requests page)
+   MEMBER LIST OF REQUESTS
    =========================================================== */
 if ($action === 'list_member_requests') {
   require_member();

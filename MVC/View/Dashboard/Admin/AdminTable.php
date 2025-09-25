@@ -3,7 +3,8 @@
 // Renders the Users Directory table shell; rows are injected by JS.
 
 if (!function_exists('render_admin_user_table')) {
-  function render_admin_user_table(): void {
+  function render_admin_user_table(): void
+  {
     // Use existing responsive table CSS
     $cssHref = function_exists('asset')
       ? asset('Public/Style/librarian-table.css') . '?v=' . time()
@@ -38,40 +39,128 @@ if (!function_exists('render_admin_user_table')) {
 
     <style>
       /* Column distribution for 5-col table (with Action) */
-      .admin-users-table .responsive-table .col-1 { flex-basis: 22%; }
-      .admin-users-table .responsive-table .col-2 { flex-basis: 30%; }
-      .admin-users-table .responsive-table .col-3 { flex-basis: 22%; }
-      .admin-users-table .responsive-table .col-4 { flex-basis: 14%; justify-content: flex-start; }
-      .admin-users-table .responsive-table .col-5 { flex-basis: 12%; justify-content: flex-end; }
+      .admin-users-table .responsive-table .col-1 {
+        flex-basis: 22%;
+      }
+
+      .admin-users-table .responsive-table .col-2 {
+        flex-basis: 30%;
+      }
+
+      .admin-users-table .responsive-table .col-3 {
+        flex-basis: 22%;
+      }
+
+      .admin-users-table .responsive-table .col-4 {
+        flex-basis: 14%;
+        justify-content: flex-start;
+      }
+
+      .admin-users-table .responsive-table .col-5 {
+        flex-basis: 12%;
+        justify-content: flex-end;
+      }
 
       .badge-role {
-        display:inline-block; padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px;
-        border:1px solid rgba(0,0,0,.08);
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 12px;
+        border: 1px solid rgba(0, 0, 0, .08);
       }
-      .badge-role.badge-admin     { background:#ffe8e8; color:#7a1f1f; border-color:#ffc9c9; }
-      .badge-role.badge-librarian { background:#e8f5ff; color:#0b3a6b; border-color:#c6e1ff; }
-      .badge-role.badge-member    { background:#e9faef; color:#14532d; border-color:#c9f4d8; }
+
+      .badge-role.badge-admin {
+        background: #ffe8e8;
+        color: #7a1f1f;
+        border-color: #ffc9c9;
+      }
+
+      .badge-role.badge-librarian {
+        background: #e8f5ff;
+        color: #0b3a6b;
+        border-color: #c6e1ff;
+      }
+
+      .badge-role.badge-member {
+        background: #e9faef;
+        color: #14532d;
+        border-color: #c9f4d8;
+      }
 
       .row-delete-btn {
         padding: 8px 12px;
         border-radius: 8px;
-        border: 1px solid rgba(31,31,31,.15);
+        border: 1px solid rgba(31, 31, 31, .15);
         background: linear-gradient(180deg, #ffe8e8, #ffdcdc);
         color: #7a1f1f;
         font-weight: 700;
         cursor: pointer;
       }
-      .row-delete-btn:hover { background: linear-gradient(180deg, #ffdede, #ffcccc); }
-      .table-row.removing   { opacity: .45; transform: translateX(6px); transition: .18s ease; }
+
+      .row-delete-btn:hover {
+        background: linear-gradient(180deg, #ffdede, #ffcccc);
+      }
+
+      .table-row.removing {
+        opacity: .45;
+        transform: translateX(6px);
+        transition: .18s ease;
+      }
+
+      /* === Scroll after 5 rows, blackish scrollbar with decent gap === */
+      .admin-users-table .responsive-table .table-row {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+      }
+
+      .admin-users-table .responsive-table {
+        --row-h: 64px;
+        --header-h: 54px;
+        max-height: calc(var(--header-h) + (5 * var(--row-h)) + 6px);
+        overflow-y: auto;
+        scrollbar-gutter: stable;
+
+        /* gap for scrollbar */
+        padding-right: 12px;
+        /* creates breathing room between content & scrollbar */
+        box-sizing: content-box;
+      }
+
+      /* Custom scrollbar styles */
+      .admin-users-table .responsive-table::-webkit-scrollbar {
+        width: 12px;
+        /* slightly wider */
+      }
+
+      .admin-users-table .responsive-table::-webkit-scrollbar-thumb {
+        background: #333;
+        /* dark gray/blackish */
+        border-radius: 6px;
+        border: 2px solid #e0e0e0;
+        /* subtle spacing effect */
+      }
+
+      .admin-users-table .responsive-table::-webkit-scrollbar-thumb:hover {
+        background: #111;
+        /* darker on hover */
+      }
+
+      .admin-users-table .responsive-table::-webkit-scrollbar-track {
+        background: #f5f5f5;
+        /* light gray track */
+      }
     </style>
 
+
     <?php
-      // include the live data loader for the table
-      $jsHref = function_exists('asset')
-        ? asset('Public/JS/admin-users.js') . '?v=' . time()
-        : '/Public/JS/admin-users.js';
-      echo '<script src="' . htmlspecialchars($jsHref, ENT_QUOTES, 'UTF-8') . '"></script>';
-    ?>
-    <?php
+    // include the live data loader for the table
+    $jsHref = function_exists('asset')
+      ? asset('Public/JS/admin-users.js') . '?v=' . time()
+      : '/Public/JS/admin-users.js';
+    echo '<script src="' . htmlspecialchars($jsHref, ENT_QUOTES, 'UTF-8') . '"></script>';
+  ?>
+  <?php
   }
 }

@@ -40,9 +40,9 @@
     const totalAmount   = Number(t.total_amount ?? 0);
 
     totals.innerHTML = `
-      <div class="totals-item"><strong>Total Members:</strong> ${totalMembers}</div>
+      <div class="totals-item"><strong>Book Buyers:</strong> ${totalMembers}</div>
       <div class="totals-item"><strong>Total Distinct Authors:</strong> ${distinctAuth}</div>
-      <div class="totals-item"><strong>Total Books:</strong> ${totalBooks}</div>
+      <div class="totals-item"><strong>Books Summary:</strong> ${totalBooks}</div>
       <div class="totals-item"><strong>Total Amount:</strong> $${money(totalAmount)}</div>
     `;
   }

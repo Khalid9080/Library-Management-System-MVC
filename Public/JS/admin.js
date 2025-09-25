@@ -1,6 +1,5 @@
 // Public/JS/admin.js
 document.addEventListener('DOMContentLoaded', () => {
-  // Build a stable base URL (same pattern as other scripts)
   const ROOT = (
     document.querySelector('base')?.href ||
     (window.APP_BASE_URL || document.baseURI)
@@ -18,7 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const elBooks       = document.getElementById('kpiTotalBooks');
   const elSales       = document.getElementById('kpiTotalSales');
 
-  // 1) Total Members + Librarians (new controller)
+  // NEW cards
+  const elBuyers      = document.getElementById('kpiBookBuyers');
+  const elAdmins      = document.getElementById('kpiTotalAdmins');
+
+  // 1) Total Members + Librarians + Admins
   function loadUsers(){
     return fetch(endpoint('MVC/Controller/AdminStatsController.php?action=count_users'))
       .then(r => r.json())
@@ -26,14 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!j || !j.ok) throw new Error(j?.error || 'count_users failed');
         if (elMembers)    elMembers.textContent    = fmtInt(j.members);
         if (elLibrarians) elLibrarians.textContent = fmtInt(j.librarians);
+        if (elAdmins)     elAdmins.textContent     = fmtInt(j.admins);
       })
       .catch(() => {
         if (elMembers)    elMembers.textContent    = '—';
         if (elLibrarians) elLibrarians.textContent = '—';
+        if (elAdmins)     elAdmins.textContent     = '—';
       });
   }
 
-  // 2) Total Books (use BooksController)
+  // 2) Total Books
   function loadBooks(){
     return fetch(endpoint('MVC/Controller/BooksController.php?action=count_books'))
       .then(r => r.json())
@@ -45,27 +50,31 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(() => { if (elBooks) elBooks.textContent = '—'; });
   }
 
-  // 3) Total Sales (pull from Buy History totals)
-  function loadSales(){
+  // 3) Total Sales + Book Buyers (from buy history totals)
+  function loadSalesAndBuyers(){
     return fetch(endpoint('MVC/Controller/RequestsController.php?action=list_buy_history'))
       .then(r => r.json())
       .then(j => {
         if (!j || !j.ok) throw new Error(j?.error || 'list_buy_history failed');
         const totalAmount = j?.totals?.total_amount ?? 0;
-        if (elSales) elSales.textContent = '$ ' + fmtMoney(totalAmount);
+        const totalBuyers = j?.totals?.total_members ?? 0;
+        if (elSales)  elSales.textContent  = '$ ' + fmtMoney(totalAmount);
+        if (elBuyers) elBuyers.textContent = fmtInt(totalBuyers);
       })
-      .catch(() => { if (elSales) elSales.textContent = '—'; });
+      .catch(() => {
+        if (elSales)  elSales.textContent  = '—';
+        if (elBuyers) elBuyers.textContent = '—';
+      });
   }
 
-  // Expose a global hook so other pages (e.g., librarian approvals)
-  // can trigger an immediate KPI refresh after approve/reject/add.
+  // Global refresh hook
   window.ADMIN_KPIS_REFRESH = () => {
     loadUsers();
     loadBooks();
-    loadSales();
+    loadSalesAndBuyers();
   };
 
-  // Initial load + lightweight refresh
-  Promise.all([loadUsers(), loadBooks(), loadSales()]).catch(() => {});
-  setInterval(() => { loadUsers(); loadBooks(); loadSales(); }, 10000);
+  // Initial + periodic refresh
+  Promise.all([loadUsers(), loadBooks(), loadSalesAndBuyers()]).catch(() => {});
+  setInterval(() => { loadUsers(); loadBooks(); loadSalesAndBuyers(); }, 10000);
 });

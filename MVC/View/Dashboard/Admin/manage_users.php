@@ -1,7 +1,5 @@
 <?php
 // MVC/View/Dashboard/Admin/manage_users.php
-// Partial view: injected inside the right-hand main content area.
-// Left sidebar remains unchanged by dashboard.php.
 ?>
 <link rel="stylesheet" href="<?= asset('Public/Style/admin-manage-users.css') ?>?v=<?= time() ?>" />
 
@@ -10,6 +8,9 @@
     <h2 id="manageUsersTitle">Manage Users</h2>
     <p class="subtitle">Update a user’s basic info and role</p>
   </header>
+
+  <!-- inline status bar for success/error -->
+  <div id="muStatus" class="amu-status" role="status" aria-live="polite" hidden></div>
 
   <div class="amu-card">
     <form class="amu-form" id="manageUsersForm" novalidate>
@@ -38,6 +39,7 @@
             <option value="">Select role</option>
             <option value="member">Member</option>
             <option value="librarian">Librarian</option>
+            <option value="admin">Admin</option>
           </select>
           <small class="error-message" id="muRoleError"></small>
         </div>
@@ -47,8 +49,13 @@
         <a class="btn-ghost" href="<?= asset('index.php?page=dashboard') ?>">Cancel</a>
         <button type="submit" class="btn-primary">Update</button>
       </div>
+
+      <!-- Hidden holder for target id/original email (set by autofill) -->
+      <input type="hidden" id="muUserId" />
+      <input type="hidden" id="muOriginalEmail" />
     </form>
   </div>
 </section>
 
 <script src="<?= asset('Public/JS/admin-manage-users.js') ?>?v=<?= time() ?>"></script>
+<script src="<?= asset('Public/JS/admin-manage-users-actions.js') ?>?v=<?= time() ?>"></script>

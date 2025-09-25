@@ -228,3 +228,45 @@
   padding-top: 10px;
   border-top: 0;
 }
+
+/* (…everything you already have stays the same…) */
+
+/* --- Admin KPIs --- */
+.admin-kpi-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  gap: 22px;
+}
+
+/* Existing cards… */
+.kpi-card.kpi-members { background: #e9faef !important; border-color: #c9f4d8 !important; }
+.kpi-card.kpi-books   { background: #eef4ff !important; border-color: #cfdcff !important; }
+.kpi-card.kpi-sales   { background: #fff5e6 !important; border-color: #ffe1b8 !important; }
+.kpi-card.kpi-librarians { background: #f0f0f5 !important; border-color: #dcdde4 !important; color: #0b1b33 !important; }
+
+/* NEW: Book Buyers (soft purple) */
+.kpi-card.kpi-buyers {
+  background: #f3eaff !important;   /* light purple */
+  border-color: #e1d2ff !important;
+}
+
+/* NEW: Total Admin (soft teal) */
+.kpi-card.kpi-admins {
+  background: #e6f8f6 !important;   /* light teal */
+  border-color: #cdeeed !important;
+}
+
+/* Keep text readable */
+.kpi-card.kpi-buyers .kpi-icon i,
+.kpi-card.kpi-buyers .kpi-meta h3,
+.kpi-card.kpi-buyers .kpi-value,
+.kpi-card.kpi-admins .kpi-icon i,
+.kpi-card.kpi-admins .kpi-meta h3,
+.kpi-card.kpi-admins .kpi-value {
+  color: #0b1b33 !important;
+}
+
+/* Responsive (unchanged) */
+@media (max-width: 900px) {
+  .admin-kpi-tiles { grid-template-columns: 1fr; }
+}

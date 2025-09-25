@@ -8,7 +8,6 @@
   </header>
 
   <div class="admin-kpi-tiles">
-    <!-- MEMBERS + LIBRARIANS -->
     <!-- MEMBERS -->
     <article class="kpi-card kpi-members" data-kpi="members">
       <div class="kpi-icon"><i class="ph-users-three"></i></div>
@@ -42,6 +41,24 @@
       <div class="kpi-meta">
         <h3>Total Sales</h3>
         <p class="kpi-value" id="kpiTotalSales">—</p>
+      </div>
+    </article>
+
+    <!-- NEW: BOOK BUYERS -->
+    <article class="kpi-card kpi-buyers" data-kpi="buyers">
+      <div class="kpi-icon"><i class="ph-handshake"></i></div>
+      <div class="kpi-meta">
+        <h3>Book Buyers</h3>
+        <p class="kpi-value" id="kpiBookBuyers">—</p>
+      </div>
+    </article>
+
+    <!-- NEW: TOTAL ADMIN -->
+    <article class="kpi-card kpi-admins" data-kpi="admins">
+      <div class="kpi-icon"><i class="ph-shield-check"></i></div>
+      <div class="kpi-meta">
+        <h3>Total Admin</h3>
+        <p class="kpi-value" id="kpiTotalAdmins">—</p>
       </div>
     </article>
   </div>

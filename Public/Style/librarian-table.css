@@ -191,3 +191,53 @@
     margin-top: 6px;
   }
 }
+
+
+/* ===============================
+   NEW: Scroll only when > 6 rows
+   =============================== */
+
+/* Make data rows a consistent height so 6 rows is predictable */
+.librarian-table-section .responsive-table .table-row {
+  min-height: 64px;             /* adjust if your rows are taller/shorter */
+  display: flex;
+  align-items: center;
+}
+
+/* Cap the list height to: header (~54px) + 6*row-height (64px) + tiny buffer.
+   overflow-y:auto will only show the scrollbar if content exceeds this height. */
+.librarian-table-section .responsive-table {
+  --row-h: 64px;
+  --header-h: 54px;
+  max-height: calc(var(--header-h) + (6 * var(--row-h)) + 6px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+
+  /* breathing room so rows aren't stuck to the scrollbar */
+  padding-right: 12px;
+  box-sizing: content-box;
+}
+
+/* Blackish scrollbar styling (WebKit/Blink) */
+.librarian-table-section .responsive-table::-webkit-scrollbar {
+  width: 12px;
+}
+.librarian-table-section .responsive-table::-webkit-scrollbar-thumb {
+  background: #333;             /* dark gray/blackish */
+  border-radius: 6px;
+  border: 2px solid #e0e0e0;    /* subtle inner gap effect */
+}
+.librarian-table-section .responsive-table::-webkit-scrollbar-thumb:hover {
+  background: #111;
+}
+.librarian-table-section .responsive-table::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+/* Firefox scrollbar (modern) */
+@supports (scrollbar-color: auto) {
+  .librarian-table-section .responsive-table {
+    scrollbar-color: #333 #f5f5f5;  /* thumb track */
+    scrollbar-width: thin;
+  }
+}
