@@ -1,20 +1,10 @@
 <?php
 // MVC/View/Dashboard/Admin/AdminTable.php
-// Reusable: render_admin_user_table($rows = null)
-// Default demo rows; later replace with DB data
+// Renders the Users Directory table shell; rows are injected by JS.
 
 if (!function_exists('render_admin_user_table')) {
-  function render_admin_user_table(?array $rows = null): void {
-    if ($rows === null) {
-      $rows = [
-        ['username'=>'Khalid Ahmed', 'email'=>'khalid.member@example.com', 'phone'=>'+8801712345678', 'role'=>'member'],
-        ['username'=>'Sara Hossain', 'email'=>'sara.librarian@example.com', 'phone'=>'+8801811223344', 'role'=>'librarian'],
-        ['username'=>'Jahid Hasan',  'email'=>'jahid.admin@example.com',    'phone'=>'+8801999887766', 'role'=>'admin'],
-        ['username'=>'Mitu Rahman',  'email'=>'mitu.member@example.com',    'phone'=>'+8801300554433', 'role'=>'member'],
-      ];
-    }
-
-    // Use librarian-table.css for base responsive grid; admin.css adds tweaks
+  function render_admin_user_table(): void {
+    // Use existing responsive table CSS
     $cssHref = function_exists('asset')
       ? asset('Public/Style/librarian-table.css') . '?v=' . time()
       : '/Public/Style/librarian-table.css';
@@ -26,50 +16,28 @@ if (!function_exists('render_admin_user_table')) {
       <div class="librarian-table-container">
         <h2 id="adminUsersTitle" class="librarian-table-title">
           Users Directory
-          <small class="subtitle">Username, email & role overview</small>
+          <small class="subtitle">Username, email &amp; role overview</small>
         </h2>
 
-        <ul class="responsive-table" role="table" aria-label="All Users">
+        <ul class="responsive-table" role="table" aria-label="All Users" id="adminUsersTable">
           <li class="table-header" role="row">
             <div class="col col-1" role="columnheader">Username</div>
             <div class="col col-2" role="columnheader">Email</div>
             <div class="col col-3" role="columnheader">Phone Number</div>
             <div class="col col-4" role="columnheader">Role</div>
-            <div class="col col-5" role="columnheader">Action</div> <!-- NEW -->
+            <div class="col col-5" role="columnheader">Action</div>
           </li>
-
-          <?php foreach ($rows as $r): ?>
-            <li class="table-row" role="row">
-              <div class="col col-1" role="cell" data-label="Username">
-                <?= htmlspecialchars($r['username'], ENT_QUOTES, 'UTF-8') ?>
-              </div>
-              <div class="col col-2" role="cell" data-label="Email">
-                <?= htmlspecialchars($r['email'], ENT_QUOTES, 'UTF-8') ?>
-              </div>
-              <div class="col col-3" role="cell" data-label="Phone Number">
-                <?= htmlspecialchars($r['phone'], ENT_QUOTES, 'UTF-8') ?>
-              </div>
-              <div class="col col-4" role="cell" data-label="Role">
-                <span class="badge badge-role badge-<?= htmlspecialchars($r['role'], ENT_QUOTES, 'UTF-8') ?>">
-                  <?= htmlspecialchars(ucfirst($r['role']), ENT_QUOTES, 'UTF-8') ?>
-                </span>
-              </div>
-              <div class="col col-5" role="cell" data-label="Action">
-                <button type="button"
-                        class="row-delete-btn"
-                        aria-label="Delete this user (demo only)"
-                        data-email="<?= htmlspecialchars($r['email'], ENT_QUOTES, 'UTF-8') ?>">
-                  Delete
-                </button>
-              </div>
-            </li>
-          <?php endforeach; ?>
+          <!-- rows injected by JS -->
         </ul>
+
+        <div id="adminUsersEmpty" style="display:none; color:#666; padding:12px 8px;">
+          No users found.
+        </div>
       </div>
     </section>
 
     <style>
-      /* Column distribution for 5-col table (adds Action) */
+      /* Column distribution for 5-col table (with Action) */
       .admin-users-table .responsive-table .col-1 { flex-basis: 22%; }
       .admin-users-table .responsive-table .col-2 { flex-basis: 30%; }
       .admin-users-table .responsive-table .col-3 { flex-basis: 22%; }
@@ -84,30 +52,26 @@ if (!function_exists('render_admin_user_table')) {
       .badge-role.badge-librarian { background:#e8f5ff; color:#0b3a6b; border-color:#c6e1ff; }
       .badge-role.badge-member    { background:#e9faef; color:#14532d; border-color:#c9f4d8; }
 
-      /* On mobile (from your librarian-table.css), the cols stack to 100% automatically. */
+      .row-delete-btn {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(31,31,31,.15);
+        background: linear-gradient(180deg, #ffe8e8, #ffdcdc);
+        color: #7a1f1f;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .row-delete-btn:hover { background: linear-gradient(180deg, #ffdede, #ffcccc); }
+      .table-row.removing   { opacity: .45; transform: translateX(6px); transition: .18s ease; }
     </style>
 
-    <script>
-      // Demo-only: visually remove the row when Delete is clicked.
-      (function(){
-        document.addEventListener('click', function(e){
-          const btn = e.target.closest('.row-delete-btn');
-          if (!btn) return;
-
-          const row = btn.closest('.table-row');
-          if (row) {
-            row.classList.add('removing');
-            setTimeout(() => row.remove(), 180);
-          }
-
-          // Later: POST to your controller to delete by id/email
-          // const form = new FormData();
-          // form.append('action', 'delete_user');
-          // form.append('email', btn.dataset.email);
-          // fetch('MVC/Controller/AdminController.php', { method:'POST', body: form }).then(...)
-        });
-      })();
-    </script>
+    <?php
+      // include the live data loader for the table
+      $jsHref = function_exists('asset')
+        ? asset('Public/JS/admin-users.js') . '?v=' . time()
+        : '/Public/JS/admin-users.js';
+      echo '<script src="' . htmlspecialchars($jsHref, ENT_QUOTES, 'UTF-8') . '"></script>';
+    ?>
     <?php
   }
 }

@@ -88,9 +88,11 @@ if ($action === 'reject_request') {
    BUY HISTORY (for the librarian history table)
    =========================================================== */
 if ($action === 'list_buy_history') {
-  require_librarian();
+  // UPDATED GUARD: allow both librarian AND admin
+  if (!is_logged_in()) err('Forbidden', 403);
+  $role = user_role();
+  if ($role !== 'librarian' && $role !== 'admin') err('Forbidden', 403);
 
-  // Rows for the table
   $rowsSql = "
     SELECT
       b.isbn, b.title, b.author, b.category,
@@ -105,15 +107,10 @@ if ($action === 'list_buy_history') {
     JOIN books b          ON b.id  = bri.book_id
     JOIN users u          ON u.id  = br.member_id
     LEFT JOIN users lib   ON lib.id = br.decided_by
-    /* If you want only approved in history, uncomment below line and remove others:
-       WHERE br.status = 'approved'
-    */
     ORDER BY br.requested_at DESC, br.id DESC, bri.id DESC
   ";
-
   $rows = $pdo->query($rowsSql)->fetchAll(PDO::FETCH_ASSOC);
 
-  // Totals
   $totalsSql = "
     SELECT
       COUNT(DISTINCT br.member_id)                 AS total_members,
@@ -123,7 +120,6 @@ if ($action === 'list_buy_history') {
     FROM book_request_items bri
     JOIN book_requests br ON br.id = bri.request_id
     JOIN books b          ON b.id  = bri.book_id
-    /* Match the WHERE clause with rows if you filter status */
   ";
   $tot = $pdo->query($totalsSql)->fetch(PDO::FETCH_ASSOC) ?: [
     'total_members' => 0,
@@ -131,8 +127,6 @@ if ($action === 'list_buy_history') {
     'total_books' => 0,
     'total_amount' => 0.0
   ];
-
-  // Backward-compatibility (if any older code expects total_quantity)
   $tot['total_quantity'] = $tot['total_books'];
 
   ok(['rows' => $rows, 'totals' => $tot]);
@@ -159,6 +153,137 @@ if ($action === 'list_member_approved_books') {
     LEFT JOIN users lib   ON lib.id = br.decided_by
     WHERE br.member_id = ? AND br.status = 'approved'
     ORDER BY br.decided_at DESC, br.id DESC, bri.id DESC
+  ";
+  $st = $pdo->prepare($sql);
+  $st->execute([$mid]);
+  $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+
+  ok(['rows' => $rows]);
+}
+
+/* ===========================================================
+   MEMBER LOCKED BOOK IDS (pending + approved)
+   =========================================================== */
+if ($action === 'member_locked_book_ids') {
+  require_member();
+
+  $user = auth_user();
+  $mid  = (int)$user['id'];
+
+  $sql = "
+    SELECT DISTINCT bri.book_id
+    FROM book_request_items bri
+    JOIN book_requests br ON br.id = bri.request_id
+    WHERE br.member_id = ? AND br.status IN ('pending','approved')
+  ";
+  $st = $pdo->prepare($sql);
+  $st->execute([$mid]);
+  $ids = array_map('intval', array_column($st->fetchAll(PDO::FETCH_ASSOC), 'book_id'));
+
+  ok(['book_ids' => $ids]);
+}
+
+/* ===========================================================
+   MEMBER CREATE REQUEST (used by Catalog → Order a Buy Request)
+   =========================================================== */
+if ($action === 'create_request') {
+  require_member();
+
+  $user = auth_user();
+  $mid  = (int)$user['id'];
+
+  $raw = $_POST['items'] ?? '[]';
+  $items = json_decode($raw, true);
+  if (!is_array($items) || empty($items)) err('No items', 422);
+
+  $clean = [];
+  foreach ($items as $it) {
+    $bid = (int)($it['book_id'] ?? 0);
+    $qty = (int)($it['quantity'] ?? 1);
+    if ($bid <= 0 || $qty <= 0) err('Invalid items', 422);
+    $clean[$bid] = ($clean[$bid] ?? 0) + $qty;
+  }
+  $bookIds = array_keys($clean);
+
+  try {
+    $pdo->beginTransaction();
+
+    // Ensure none of these books are already pending/approved by this member
+    $in = implode(',', array_fill(0, count($bookIds), '?'));
+    $params = array_merge([$mid], $bookIds);
+    $checkSql = "
+      SELECT DISTINCT bri.book_id
+      FROM book_request_items bri
+      JOIN book_requests br ON br.id = bri.request_id
+      WHERE br.member_id = ? AND br.status IN ('pending','approved')
+        AND bri.book_id IN ($in)
+    ";
+    $chk = $pdo->prepare($checkSql);
+    $chk->execute($params);
+    $already = array_map('intval', array_column($chk->fetchAll(PDO::FETCH_ASSOC), 'book_id'));
+    if (!empty($already)) {
+      $pdo->rollBack();
+      err('Some books are already requested/approved: ' . implode(',', $already), 409);
+    }
+
+    // Fetch unit prices
+    $priceSql = "SELECT id, price FROM books WHERE id IN ($in)";
+    $pstmt = $pdo->prepare($priceSql);
+    $pstmt->execute($bookIds);
+    $priceMap = [];
+    foreach ($pstmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
+      $priceMap[(int)$r['id']] = (float)$r['price'];
+    }
+    foreach ($bookIds as $bid) {
+      if (!isset($priceMap[$bid])) {
+        $pdo->rollBack();
+        err("Book not found: $bid", 404);
+      }
+    }
+
+    // Create header + lines
+    $hdr = $pdo->prepare("INSERT INTO book_requests (member_id, status) VALUES (?, 'pending')");
+    $hdr->execute([$mid]);
+    $rid = (int)$pdo->lastInsertId();
+
+    $line = $pdo->prepare("
+      INSERT INTO book_request_items (request_id, book_id, quantity, unit_price)
+      VALUES (?,?,?,?)
+    ");
+    foreach ($bookIds as $bid) {
+      $line->execute([$rid, $bid, $clean[$bid], $priceMap[$bid]]);
+    }
+
+    $pdo->commit();
+    ok(['request_id' => $rid], 201);
+  } catch (PDOException $e) {
+    if ($pdo->inTransaction()) $pdo->rollBack();
+    err('Server error', 500);
+  }
+}
+
+/* ===========================================================
+   MEMBER LIST OF REQUESTS (for My Book Requests page)
+   =========================================================== */
+if ($action === 'list_member_requests') {
+  require_member();
+
+  $user = auth_user();
+  $mid  = (int)$user['id'];
+
+  $sql = "
+    SELECT
+      br.id            AS request_id,
+      br.status,
+      br.requested_at,
+      b.isbn, b.title, b.author, b.category, b.published_year,
+      bri.quantity, bri.unit_price
+    FROM book_request_items bri
+    JOIN book_requests br ON br.id = bri.request_id
+    JOIN books b          ON b.id  = bri.book_id
+    WHERE br.member_id = ?
+      AND br.status IN ('pending','approved','rejected')
+    ORDER BY br.requested_at DESC, br.id DESC, bri.id DESC
   ";
   $st = $pdo->prepare($sql);
   $st->execute([$mid]);

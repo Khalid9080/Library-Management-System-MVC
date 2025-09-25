@@ -4,6 +4,7 @@
   width: 100%;
   padding-left: 0 !important;
 }
+
 .role-dashboard.role-admin .navigation a {
   justify-content: flex-start !important;
   text-align: left !important;
@@ -15,69 +16,128 @@
 /* Welcome banner: no dark bg, BUT white text per your request */
 .role-dashboard.role-admin .welcome-title {
   background: transparent !important;
-  color: #ffffff !important;               /* white text */
-  text-shadow: 0 1px 2px rgba(0,0,0,.3);   /* subtle for contrast */
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .3);
   border: 0 !important;
 }
 
 /* --- Admin KPIs --- */
 .admin-kpis {
   margin-top: 10px;
-  margin-bottom: 28px;                     /* gap before table block */
+  margin-bottom: 28px;
 }
 
-/* Only the header text uses neutral background—do NOT blank out card colors */
 .admin-kpis-header h2 {
-  font-size: 1.7rem;                       /* slightly larger */
+  font-size: 1.7rem;
   margin: 0;
   color: #0b1b33;
   font-weight: 800;
 }
+
 .admin-kpis-header .subtitle {
   margin: 6px 0 18px;
   color: #6A7A8A;
   font-size: 1rem;
 }
 
-/* --- Bigger cards (wider, taller, more spacing) --- */
 .admin-kpi-tiles {
   display: grid;
-  grid-template-columns: repeat(3, minmax(300px, 1fr)); /* wider min */
-  gap: 22px;                                            /* more gap */
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  gap: 22px;
 }
 
 .kpi-card {
-  display:flex; align-items:center; gap:18px;
-  padding: 26px 28px;                  /* bigger padding */
-  min-height: 180px;                   /* taller card */
-  border-radius: 16px;                 /* rounder corners */
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 26px 28px;
+  min-height: 180px;
+  border-radius: 16px;
   border: 1px solid #e6edf7;
-  box-shadow: 0 10px 24px rgba(0,0,0,.07);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .07);
 }
 
-/* Distinct backgrounds for each card */
-.kpi-card.kpi-members { background:#e9faef !important; border-color:#c9f4d8 !important; }
-.kpi-card.kpi-books   { background:#eef4ff !important; border-color:#cfdcff !important; }
-.kpi-card.kpi-sales   { background:#fff5e6 !important; border-color:#ffe1b8 !important; }
+.kpi-card.kpi-members {
+  background: #e9faef !important;
+  border-color: #c9f4d8 !important;
+}
 
-/* Darker/brighter icons + larger size */
+.kpi-card.kpi-books {
+  background: #eef4ff !important;
+  border-color: #cfdcff !important;
+}
+
+.kpi-card.kpi-sales {
+  background: #fff5e6 !important;
+  border-color: #ffe1b8 !important;
+}
+
 .kpi-card .kpi-icon i {
-  font-size: 2.8rem;                   /* larger icon */
-  color: #0b1b33;                      /* darker */
+  font-size: 2.8rem;
+  color: #0b1b33;
   opacity: 1;
 }
 
 .kpi-card .kpi-meta h3 {
   margin: 0 0 8px;
   font-size: 1.1rem;
-  color:#0b1b33;
+  color: #0b1b33;
 }
+
 .kpi-card .kpi-value {
   margin: 0;
-  font-size: 2.2rem;                   /* larger number */
+  font-size: 2.2rem;
   font-weight: 800;
-  color:#0b1b33;
+  color: #0b1b33;
 }
+
+/* >>> NEW: members card shows members + librarians side-by-side */
+.kpi-meta-duo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.kpi-meta-duo .kpi-block {
+  display: flex;
+  flex-direction: column;
+}
+
+/* >>> NEW: green rectangular box for Librarians number (numbers only) */
+.kpi-sub {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  min-width: 96px;
+  border: 2px solid #2ecc71;
+  /* green outline */
+  background: #eafff1;
+  /* soft green bg */
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #0b1b33;
+  line-height: 1;
+}
+/* Librarians card - soft pastel theme */
+.kpi-card.kpi-librarians {
+  background: #f0f0f5 !important;     /* soft light gray-lavender */
+  border-color: #dcdde4 !important;
+  color: #0b1b33 !important;          /* dark text for readability */
+}
+
+/* Ensure icon + text are consistent */
+.kpi-card.kpi-librarians .kpi-icon i,
+.kpi-card.kpi-librarians .kpi-meta h3,
+.kpi-card.kpi-librarians .kpi-value {
+  color: #0b1b33 !important;          /* same dark tone as other cards */
+}
+/* Optional: subtle hover polish */
+/* .kpi-card.kpi-librarians:hover {
+  background: #323741 !important;      
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.12);
+} */
 
 /* Table spacing harmony */
 .admin-users-table .librarian-table-title {
@@ -85,8 +145,11 @@
 }
 
 @media (max-width: 900px) {
-  .admin-kpi-tiles { grid-template-columns: 1fr; }
+  .admin-kpi-tiles {
+    grid-template-columns: 1fr;
+  }
 }
+
 /* === Remove any backdrop/transparent overlay from the Admin Overview header ONLY === */
 .role-dashboard.role-admin .admin-kpis-header,
 .role-dashboard.role-admin .admin-kpis-header *,
@@ -107,15 +170,20 @@
   content: none !important;
 }
 
-/* Safety: ensure cards keep their colors (these already exist but reinforced here) */
-.role-dashboard.role-admin .kpi-card.kpi-members { background:#e9faef !important; }
-.role-dashboard.role-admin .kpi-card.kpi-books   { background:#eef4ff !important; }
-.role-dashboard.role-admin .kpi-card.kpi-sales   { background:#fff5e6 !important; }
+/* Safety: ensure cards keep their colors */
+.role-dashboard.role-admin .kpi-card.kpi-members {
+  background: #e9faef !important;
+}
 
+.role-dashboard.role-admin .kpi-card.kpi-books {
+  background: #eef4ff !important;
+}
+
+.role-dashboard.role-admin .kpi-card.kpi-sales {
+  background: #fff5e6 !important;
+}
 
 /* === Disable sticky behavior for Admin Overview header & subtitle === */
-
-/* If anything tried to make the whole KPI block sticky */
 .role-dashboard.role-admin .admin-kpis {
   position: static !important;
   top: auto !important;
@@ -123,15 +191,13 @@
   z-index: auto !important;
 }
 
-/* The header row itself (title + subtitle) */
 .role-dashboard.role-admin .admin-kpis-header {
-  position: static !important;   /* not sticky/fixed */
+  position: static !important;
   top: auto !important;
   inset: auto !important;
   z-index: auto !important;
 }
 
-/* Title + subtitle nodes */
 .role-dashboard.role-admin .admin-kpis-header h2,
 .role-dashboard.role-admin .admin-kpis-header .subtitle {
   position: static !important;
@@ -139,7 +205,7 @@
   inset: auto !important;
 }
 
-/* Nuke any utility classes a lib/theme might add */
+/* Nuke any utility sticky classes a theme might add */
 .role-dashboard.role-admin .admin-kpis-header.sticky,
 .role-dashboard.role-admin .admin-kpis-header.is-sticky,
 .role-dashboard.role-admin .admin-kpis-header.sticky-top,
@@ -158,7 +224,7 @@
 
 /* === Bigger gap between Admin Overview section and Users Directory table === */
 .role-dashboard.role-admin .admin-users-table {
-  margin-top: 60px !important;   /* increase vertical space */
-  padding-top: 10px;             /* optional softer spacing */
-  border-top: 0;                 /* make sure no border shows */
+  margin-top: 60px !important;
+  padding-top: 10px;
+  border-top: 0;
 }

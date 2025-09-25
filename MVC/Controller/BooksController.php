@@ -160,20 +160,19 @@ if ($action === 'update_book') {
 
 /* ---------- Count Books (global + by the current librarian) ---------- */
 if ($action === 'count_books') {
-  require_librarian();
-  $user = auth_user();
-  $uid  = (int)$user['id'];
+  if (!is_logged_in()) err('Forbidden', 403);
+  $role = user_role();
+
+  // both librarian & admin can view
+  if ($role !== 'librarian' && $role !== 'admin') {
+    err('Forbidden', 403);
+  }
 
   // global count
   $stAll = $pdo->query("SELECT COUNT(*) FROM books");
   $countAll = (int)$stAll->fetchColumn();
 
-  // my count
-  $stMine = $pdo->prepare("SELECT COUNT(*) FROM books WHERE created_by = ?");
-  $stMine->execute([$uid]);
-  $countMine = (int)$stMine->fetchColumn();
-
-  ok(['count_all' => $countAll, 'count_mine' => $countMine], 200);
+  ok(['count_all' => $countAll], 200);
 }
 
 
