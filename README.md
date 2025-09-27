@@ -8,30 +8,51 @@ Modern, database-backed LMS with **role-based dashboards** for **Admin / Librari
 
 ---
 
-## ✨ Features
+## 🚀 Features
 
-- **Auth & Roles**
-  - Register / Login / Logout / Reset password
-  - Roles: **Admin**, **Librarian**, **Member** (single `users` table + `roles` table)
-  - Passwords stored as `password_hash()` (bcrypt by default)
+### 🔑 Authentication & Roles
+- Role-based login and registration (Admin / Librarian / Member).
+- Secure password hashing and reset password functionality.
+- Session-based authentication.
 
-- **Dashboards**
-  - **Admin**: Total Members, Total Books, Total Sales; Manage Users (update username/phone only), Users directory (delete); Transaction History
-  - **Librarian**: Add/Update/Delete books, **Approve/Reject** member buy-requests, Buy History (approved requests + totals)
-  - **Member**: Catalog (search, real-time from DB), select single/multi books → **Order Buy Request**; **My Book Requests**; **My Books** (after approval)
+### 👤 Admin
+- Add, update, view, and delete **Members** or **Librarians**.
+- View total **Members**, **Books**, and **Sales**.
+- Manage users (update username/phone by email & role).
+- Transaction history (view all buy approvals made by librarians).
+- CRUD operations on members/librarians.
 
-- **Buy Request Workflow**
-  1. Member adds one or more books to a buy request (cart-style)
-  2. Librarian sees **Approve / Reject** cards per request (with requester + books + prices)
-  3. On **Approve**:
-     - Books appear in **Member → My Books**
-     - Entry appears in **Librarian → Buy History**
-     - **Admin → Transaction History** & **Total Sales** update
-  4. On **Reject**:
-     - Request card disappears for librarian; request marked rejected for member
+### 📖 Librarian
+- Add, update, view, and delete **Books**.
+- Approve or reject **Book Buy Requests** from members.
+- Maintain **Buy History** with member and book details.
+- Dashboard cards for:
+  - Add new books
+  - Update book info
+  - Total books added
 
-- **Consistent Data Model**
-  - One source of truth for users/roles. Any admin edits (username/phone) reflect across app.
+### 👥 Member
+- Search and view **catalog of books** (fetched in real-time from database).
+- Request to **buy books** (single or multiple).
+- View **My Book Requests** (pending approvals).
+- View approved books in **My Books** after librarian approval.
+
+### 📊 Dashboard Overview
+- **Admin**: Total Members, Total Books, Total Sales.
+- **Librarian**: Total Books, All Books table, Approve Requests, Buy History.
+- **Member**: Catalog with live search, My Books, My Book Requests.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Backend**: PHP (MVC architecture)
+- **Database**: MySQL
+- **Frontend**: HTML5, CSS3, JavaScript (Vanilla JS)
+- **Styling**: Responsive CSS with reusable components
+- **Version Control**: Git & GitHub
+
+---
 
 ## 🗂️ Project Structure (Markdown list)
 
@@ -140,17 +161,32 @@ Modern, database-backed LMS with **role-based dashboards** for **Admin / Librari
 |-----|----------|---------------|---------|---------------|---------|------------|
 | 1   | JohnDoe  | john@ex.com   | 1234567 | ************* | 1       | 2025-01-01 |
 
-### Future Expansion
-- Books table  
-- Requests table  
-- Transactions table  
+**users**
+- `id` (INT, PK, AUTO_INCREMENT)
+- `username` (VARCHAR)
+- `email` (VARCHAR, UNIQUE)
+- `phone` (VARCHAR)
+- `password_hash` (VARCHAR)
+- `role_id` (FK → roles.role_id)
+- `created_at` (TIMESTAMP)
+
+### Notes
+- All authentication and role-based access control rely on the **users** and **roles** tables.
+- Additional tables for `books`, `buy_requests`, and `transactions` should be implemented for full functionality.
 
 ---
 
-## ⚙️ Installation
+## ⚙️ Installation & Setup
 
+### Prerequisites
+- PHP 8+
+- MySQL 5.7+ or MariaDB
+- Apache / Nginx (or XAMPP/LAMP/MAMP/WAMP for local setup)
+- Git
+
+### Steps
 1. **Clone Repository**
-   ```bash
-   git clone https://github.com/yourusername/Library-Management-System.git
-   cd Library-Management-System
+```bash
+git clone https://github.com/yourusername/Library-Management-System.git
+cd Library-Management-System
 
