@@ -1,3 +1,38 @@
+
+# 📚 Libraria — Role-Based Library Management System (LMS)
+
+Modern, database-backed LMS with **role-based dashboards** for **Admin / Librarian / Member**. Supports adding & updating books, member buy-requests, librarian approvals, and admin-level metrics & transaction history — all tied to a single MySQL database.
+
+> **Tech**: PHP (procedural MVC), MySQL, Vanilla JS, HTML5, CSS3  
+> **Live pages**: `index.php?page=dashboard|register|login|...` via simple query-param routing
+
+---
+
+## ✨ Features
+
+- **Auth & Roles**
+  - Register / Login / Logout / Reset password
+  - Roles: **Admin**, **Librarian**, **Member** (single `users` table + `roles` table)
+  - Passwords stored as `password_hash()` (bcrypt by default)
+
+- **Dashboards**
+  - **Admin**: Total Members, Total Books, Total Sales; Manage Users (update username/phone only), Users directory (delete); Transaction History
+  - **Librarian**: Add/Update/Delete books, **Approve/Reject** member buy-requests, Buy History (approved requests + totals)
+  - **Member**: Catalog (search, real-time from DB), select single/multi books → **Order Buy Request**; **My Book Requests**; **My Books** (after approval)
+
+- **Buy Request Workflow**
+  1. Member adds one or more books to a buy request (cart-style)
+  2. Librarian sees **Approve / Reject** cards per request (with requester + books + prices)
+  3. On **Approve**:
+     - Books appear in **Member → My Books**
+     - Entry appears in **Librarian → Buy History**
+     - **Admin → Transaction History** & **Total Sales** update
+  4. On **Reject**:
+     - Request card disappears for librarian; request marked rejected for member
+
+- **Consistent Data Model**
+  - One source of truth for users/roles. Any admin edits (username/phone) reflect across app.
+
 ## 🗂️ Project Structure (Markdown list)
 
 - `index.php`
