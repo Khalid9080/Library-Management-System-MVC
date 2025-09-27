@@ -126,4 +126,31 @@ Modern, database-backed LMS with **role-based dashboards** for **Admin / Librari
 | Admin Metrics (Totals & Transactions) | ✅ | View own history | View own |
 
 ---
+## 🗄️ Database Schema
+
+### Table: `roles`
+| role_id | role_name   |
+|---------|-------------|
+| 1       | Admin       |
+| 2       | Librarian   |
+| 3       | Member      |
+
+### Table: `users`
+| id  | username | email         | phone   | password_hash | role_id | created_at |
+|-----|----------|---------------|---------|---------------|---------|------------|
+| 1   | JohnDoe  | john@ex.com   | 1234567 | ************* | 1       | 2025-01-01 |
+
+### Future Expansion
+- Books table  
+- Requests table  
+- Transactions table  
+
+---
+
+## ⚙️ Installation
+
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/yourusername/Library-Management-System.git
+   cd Library-Management-System
 
