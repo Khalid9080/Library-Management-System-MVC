@@ -110,3 +110,20 @@ Modern, database-backed LMS with **role-based dashboards** for **Admin / Librari
 - `.env.sample`
 
 ---
+## 🧩 Roles & Capabilities
+
+| Capability | Admin | Librarian | Member |
+|---|:--:|:--:|:--:|
+| Register / Login / Reset | ✅ | ✅ | ✅ |
+| Add / Update / Delete Books | ❌ | ✅ | ❌ |
+| Search Catalog | ❌ | ✅ (view) | ✅ |
+| Send Buy Request | ❌ | ❌ | ✅ |
+| Approve / Reject Requests | ❌ | ✅ | ❌ |
+| View My Book Requests | ❌ | ❌ | ✅ |
+| View My Books (post-approval) | ❌ | ❌ | ✅ |
+| Manage Users (update username/phone) | ✅ | ❌ | ❌ |
+| Users Directory (delete user) | ✅ | ❌ | ❌ |
+| Admin Metrics (Totals & Transactions) | ✅ | View own history | View own |
+
+---
+
